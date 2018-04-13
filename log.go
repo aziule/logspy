@@ -23,7 +23,6 @@ type LogFile struct {
 }
 
 type Log struct {
-	ParsedAt       time.Time `json:"parsed_at"`
 	Raw            string    `json:"raw"`
 	Time           time.Time `json:"time"`
 	Level          string    `json:"level"`
@@ -51,11 +50,9 @@ func (f *LogFile) Tail() {
 
 func parseLog(content string) *Log {
 	parsed := r.FindStringSubmatch(content)
-	now := time.Now().UTC()
 
 	parsedLog := &Log{
-		ParsedAt: now,
-		Raw:      content,
+		Raw: content,
 	}
 
 	if len(parsed) != 6 {

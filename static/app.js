@@ -45,7 +45,7 @@ ApiClient.prototype.fetchNewLogs = function(since) {
 }
 
 function Logs() {
-    this.newestLogTimestamp = 0;
+    this.newestLogTimestamp =Math.trunc(Date.now() / 1000);
     this.logs = [];
     this.el = document.getElementById('logs');
     this.apiClient = new ApiClient();

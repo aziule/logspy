@@ -35,7 +35,7 @@ func apiLogsAction(w http.ResponseWriter, req *http.Request) {
 	logs := []*Log{}
 
 	for _, log := range logFile.Logs {
-		if sinceTime.Before(log.ParsedAt) {
+		if sinceTime.Before(log.Time) {
 			logs = append(logs, log)
 		}
 	}
