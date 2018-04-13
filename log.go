@@ -19,7 +19,7 @@ func init() {
 
 type LogFile struct {
 	FilePath string
-	Logs []*Log
+	Logs     []*Log
 }
 
 type Log struct {
