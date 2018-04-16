@@ -11,14 +11,9 @@ import (
 
 var logFile *LogFile
 
-func init() {
-	logFile = &LogFile{
-		FilePath: "/home/will/work/oss_docker/webapp/symfony/var/logs/dev.log",
-	}
-}
-
 type LogFile struct {
 	FilePath string
+	TailChan *tail.Tail
 	Logs     []*Log
 }
 
@@ -38,9 +33,13 @@ func (f *LogFile) Tail() {
 		Location: &tail.SeekInfo{Whence: os.SEEK_END},
 	})
 
+	defer tailChan.Stop()
+
 	if err != nil {
 		log.Panic(err)
 	}
+
+	f.TailChan = tailChan
 
 	for line := range tailChan.Lines {
 		parsedLog := parseLog(line.Text)

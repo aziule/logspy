@@ -1,10 +1,88 @@
 function App() {
     this.isRunning = false;
-    this.logs = new Logs();
+
+    var apiClient = new ApiClient();
+    this.fileBrowser = new FileBrowser(apiClient);
+    this.logs = new Logs(apiClient);
+}
+
+function FileBrowser(apiClient) {
+    this.currentDirPath = '';
+    this.dirs = [];
+    this.files = [];
+    this.apiClient = apiClient;
+    this.el = document.getElementById('file-browser');
+    this.elCurrentDir = document.getElementById('current-dir');
+    this.elGotoParent = document.getElementById('goto-parent');
+    this.elFilesExplorer = document.getElementById('files-explorer');
+
+    this.elGotoParent.onclick = function() {
+        var parentDir = this.currentDirPath.split('/');
+        parentDir.splice(-1, 1);
+        parentDir = parentDir.join('/');
+        if (parentDir === '') parentDir = '/';
+        this.browseDir(parentDir);
+    }.bind(this);
+}
+
+FileBrowser.prototype.browseDir = function(path) {
+    if (path === undefined) path = '';
+
+    this.apiClient.browseDir(path)
+        .catch(function(response) {
+            console.error(response.httpStatus, response.httpStatusText);
+        })
+        .then(function(dirInfo) {
+            this.currentDirPath = dirInfo.path;
+            this.dirs = dirInfo.directories;
+            this.files = dirInfo.files;
+            this.render();
+        }.bind(this));
+}
+
+FileBrowser.prototype.selectFile = function(path) {
+    this.apiClient.openFile(path)
+        .catch(function(response) {
+            console.error(response.httpStatus, response.httpStatusText);
+        })
+        .then(function() {
+            this.render();
+        }.bind(this));
+}
+
+FileBrowser.prototype.render = function() {
+    var self = this;
+
+    this.elCurrentDir.innerHTML = self.currentDirPath;
+    this.elFilesExplorer.innerHTML = '';
+
+    for (var index in this.dirs) {
+        var dir = document.createElement('div');
+        dir.className = 'dir';
+        dir.appendChild(document.createTextNode(this.dirs[index]));
+        dir.onclick = function() {
+            var dirToBrowse = (self.currentDirPath + '/' + this.innerHTML).replace('//', '/');
+            self.browseDir(dirToBrowse);
+        }
+        this.elFilesExplorer.appendChild(dir);
+    }
+
+    for (var index in this.files) {
+        var file = document.createElement('div');
+        file.className = 'file';
+        file.appendChild(document.createTextNode(this.files[index]));
+        this.elFilesExplorer.appendChild(file);
+        file.onclick = function() {
+            var fileToSelect = (self.currentDirPath + '/' + this.innerHTML).replace('//', '');
+            self.selectFile(fileToSelect);
+        }
+    }
 }
 
 App.prototype.run = function() {
     if (this.isRunning) return;
+
+    this.fileBrowser.browseDir();
 
     setInterval(function() {
         this.logs.fetchNewLogs();
@@ -12,6 +90,68 @@ App.prototype.run = function() {
 }
 
 function ApiClient() {}
+
+ApiClient.prototype.openFile = function(path) {
+    return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/api/open?path='+path);
+
+        xhr.onload = function() {
+            if (this.status === 200) {
+                var apiData = JSON.parse(this.responseText);
+
+                resolve(apiData);
+                return;
+            }
+
+            reject({
+                httpStatus: this.status,
+                httpStatusText: this.statusText
+            });
+        };
+
+        xhr.onerror = function() {
+            reject({
+                httpStatus: this.status,
+                httpStatusText: this.statusText
+            });
+        };
+
+        xhr.send();
+    });
+}
+
+ApiClient.prototype.browseDir = function(path) {
+    return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', '/api/browse?path='+path);
+
+        xhr.onload = function() {
+            if (this.status === 200) {
+                var apiData = JSON.parse(this.responseText);
+
+                resolve(apiData);
+                return;
+            }
+
+            reject({
+                httpStatus: this.status,
+                httpStatusText: this.statusText
+            });
+        };
+
+        xhr.onerror = function() {
+            reject({
+                httpStatus: this.status,
+                httpStatusText: this.statusText
+            });
+        };
+
+        xhr.send();
+    });
+}
 
 ApiClient.prototype.fetchNewLogs = function(since) {
     return new Promise(function(resolve, reject) {
@@ -44,11 +184,11 @@ ApiClient.prototype.fetchNewLogs = function(since) {
     });
 }
 
-function Logs() {
+function Logs(apiClient) {
     this.newestLogTimestamp =Math.trunc(Date.now() / 1000);
     this.logs = [];
     this.el = document.getElementById('logs');
-    this.apiClient = new ApiClient();
+    this.apiClient = apiClient;
 }
 
 Logs.prototype.fetchNewLogs = function() {
