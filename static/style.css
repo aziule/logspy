@@ -1,5 +1,41 @@
+td pre {
+    white-space: pre-wrap;;
+    word-wrap: break-word;
+}
+
 #goto-parent {
     margin-bottom: 15px;
+}
+
+.file-browser__shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .2);
+}
+
+#file-browser {
+    position: absolute;
+    background-color: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 15px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -o-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#files-explorer {
+    width: 400px;
+    height: 300px;
+    overflow-y: auto;
 }
 
 #files-explorer div {
@@ -23,8 +59,4 @@
     content: '‣';
     float: left;
     margin-right: 5px;
-}
-
-.file {
-
 }

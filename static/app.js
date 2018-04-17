@@ -8,10 +8,12 @@ function App() {
 
 function FileBrowser(apiClient) {
     this.currentDirPath = '';
+    this.openedFile = '';
     this.dirs = [];
     this.files = [];
     this.apiClient = apiClient;
     this.el = document.getElementById('file-browser');
+    this.elWrapper = document.getElementById('file-browser-wrapper');
     this.elCurrentDir = document.getElementById('current-dir');
     this.elGotoParent = document.getElementById('goto-parent');
     this.elFilesExplorer = document.getElementById('files-explorer');
@@ -35,7 +37,9 @@ FileBrowser.prototype.browseDir = function(path) {
         .then(function(dirInfo) {
             this.currentDirPath = dirInfo.path;
             this.dirs = dirInfo.directories;
-            this.files = dirInfo.files;
+            this.files = dirInfo.files.filter(function(file) {
+                return file.endsWith('.log');
+            });
             this.render();
         }.bind(this));
 }
@@ -46,6 +50,7 @@ FileBrowser.prototype.selectFile = function(path) {
             console.error(response.httpStatus, response.httpStatusText);
         })
         .then(function() {
+            this.openedFile = path;
             this.render();
         }.bind(this));
 }
@@ -77,6 +82,8 @@ FileBrowser.prototype.render = function() {
             self.selectFile(fileToSelect);
         }
     }
+
+    this.elWrapper.className = this.openedFile ? 'hide' : '';
 }
 
 App.prototype.run = function() {
@@ -85,103 +92,54 @@ App.prototype.run = function() {
     this.fileBrowser.browseDir();
 
     setInterval(function() {
+        if (!this.fileBrowser.openedFile) return;
         this.logs.fetchNewLogs();
     }.bind(this), 1000);
 }
 
-function ApiClient() {}
+function ApiClient() {
+    this.get = function(url) {
+        return new Promise(function(resolve, reject) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', url);
+
+            xhr.onload = function() {
+                if (this.status === 200) {
+                    var apiData = JSON.parse(this.responseText);
+
+                    resolve(apiData);
+                    return;
+                }
+
+                reject({
+                    httpStatus: this.status,
+                    httpStatusText: this.statusText
+                });
+            };
+
+            xhr.onerror = function() {
+                reject({
+                    httpStatus: this.status,
+                    httpStatusText: this.statusText
+                });
+            };
+
+            xhr.send();
+        });
+    }
+}
 
 ApiClient.prototype.openFile = function(path) {
-    return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', '/api/open?path='+path);
-
-        xhr.onload = function() {
-            if (this.status === 200) {
-                var apiData = JSON.parse(this.responseText);
-
-                resolve(apiData);
-                return;
-            }
-
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.onerror = function() {
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.send();
-    });
+    return this.get('/api/open?path='+path);
 }
 
 ApiClient.prototype.browseDir = function(path) {
-    return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', '/api/browse?path='+path);
-
-        xhr.onload = function() {
-            if (this.status === 200) {
-                var apiData = JSON.parse(this.responseText);
-
-                resolve(apiData);
-                return;
-            }
-
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.onerror = function() {
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.send();
-    });
+    return this.get('/api/browse?path='+path);
 }
 
 ApiClient.prototype.fetchNewLogs = function(since) {
-    return new Promise(function(resolve, reject) {
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', '/api/logs?since='+since);
-
-        xhr.onload = function() {
-            if (this.status === 200) {
-                var apiData = JSON.parse(this.responseText);
-
-                resolve(apiData);
-                return;
-            }
-
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.onerror = function() {
-            reject({
-                httpStatus: this.status,
-                httpStatusText: this.statusText
-            });
-        };
-
-        xhr.send();
-    });
+    return this.get('/api/logs?since='+since);
 }
 
 function Logs(apiClient) {

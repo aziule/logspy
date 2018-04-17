@@ -11,14 +11,7 @@
 <body>
     <section id="app">
         <div class="row">
-            <div class="col s4">
-                <div id="file-browser">
-                    <button class="btn" id="goto-parent">Parent dir</button>
-                    <div id="current-dir"></div>
-                    <div id="files-explorer"></div>
-                </div>
-            </div>
-            <div class="col s8">
+            <div class="col s12">
                 <table id="logs">
                     <tr>
                         <th>Time</th>
@@ -29,6 +22,15 @@
                 </table>
             </div>
         </div>
+
+        <div id="file-browser-wrapper">
+            <div class="file-browser__shadow"></div>
+            <div id="file-browser">
+                <div><b>Open log file</b></div>
+                <button class="btn right" id="goto-parent">Parent</button>
+                <div id="current-dir"></div>
+                <div id="files-explorer"></div>
+            </div></div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
