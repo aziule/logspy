@@ -84,6 +84,10 @@ td pre {
     clear: both;
 }
 
+.hidden {
+    display: none;
+}
+
 #recent-files {
     min-height: 315px;
     overflow-y: auto;
@@ -100,4 +104,16 @@ td pre {
 
 .recent-files__file-name {
     font-weight: bold;
+}
+
+#file-browser__error {
+    color: white;
+    padding: 15px;
+    background-color: #e57373;
+    display: none;
+    margin-bottom: 15px;
+}
+
+.file-browser__error--active {
+    display: block!important;
 }

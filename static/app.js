@@ -51,25 +51,27 @@ function App() {
 }
 
 function FileBrowser(apiClient, storage) {
-    this.strategies = {
-        RECENT: 'recent',
-        INPUT: 'input',
-        BROWSE: 'browse',
-    };
     this.storage = storage;
     this.currentDirPath = '';
-    this.strategy = this.strategies.RECENT;
     this.openedFile = '';
     this.dirs = [];
     this.files = [];
     this.apiClient = apiClient;
 
     this.el = document.getElementById('file-browser');
+    this.elError = document.getElementById('file-browser__error');
     this.elWrapper = document.getElementById('file-browser-wrapper');
+    this.elFileInputForm = document.getElementById('file-browser__input-form');
+    this.elFileInputFormInput = document.getElementById('file-browser__input-form__input');
     this.elCurrentDir = document.getElementById('current-dir');
     this.elGotoParent = document.getElementById('goto-parent');
     this.elRecentFiles = document.getElementById('recent-files');
     this.elFilesExplorer = document.getElementById('files-explorer');
+
+    this.elFileInputForm.onsubmit = function() {
+        this.selectFile(this.elFileInputFormInput.value);
+        return false;
+    }.bind(this);
 
     this.elGotoParent.onclick = function() {
         var parentDir = this.currentDirPath.split('/');
@@ -84,9 +86,6 @@ FileBrowser.prototype.browseDir = function(path) {
     if (path === undefined) path = '';
 
     this.apiClient.browseDir(path)
-        .catch(function(response) {
-            console.error(response.httpStatus, response.httpStatusText);
-        })
         .then(function(dirInfo) {
             this.currentDirPath = dirInfo.path;
             this.dirs = dirInfo.directories;
@@ -94,19 +93,26 @@ FileBrowser.prototype.browseDir = function(path) {
                 return file.endsWith('.log');
             });
             this.render();
-        }.bind(this));
+        }.bind(this))
+        .catch(function(response) {
+            console.error(response.httpStatus, response.httpStatusText);
+        });
 }
 
 FileBrowser.prototype.selectFile = function(path) {
     this.apiClient.openFile(path)
-        .catch(function(response) {
-            console.error(response.httpStatus, response.httpStatusText);
-        })
         .then(function() {
             this.openedFile = path;
 
+            this.elError.classList.remove('file-browser__error--active');
             this.storage.addFile(path);
             this.render();
+        }.bind(this))
+        .catch(function(response) {
+            this.openedFile = '';
+            this.elError.innerHTML = response.httpStatusText;
+            this.elError.classList.add('file-browser__error--active');
+            console.error(response.httpStatus, response.httpStatusText);
         }.bind(this));
 }
 
@@ -231,9 +237,6 @@ function Logs(apiClient) {
 
 Logs.prototype.fetchNewLogs = function() {
     this.apiClient.fetchNewLogs(this.newestLogTimestamp)
-        .catch(function(response) {
-            console.error(response.httpStatus, response.httpStatusText);
-        })
         .then(function(logs) {
             newestTimestamp = 0;
 
@@ -262,7 +265,10 @@ Logs.prototype.fetchNewLogs = function() {
             if (newestTimestamp > this.newestLogTimestamp) this.newestLogTimestamp = newestTimestamp;
 
             this.render();
-        }.bind(this));
+        }.bind(this))
+        .catch(function(response) {
+            console.error(response.httpStatus, response.httpStatusText);
+        });
 }
 
 Logs.prototype.append = function(log) {

@@ -27,6 +27,7 @@
             <div class="file-browser__shadow"></div>
             <div id="file-browser">
                 <div class="file-browser__title"><b>Open a log file</b></div>
+                <div id="file-browser__error"></div>
                 <ul class="tabs file-browser__tabs">
                     <li class="tab"><a href="#recent" class="active">Recent</a></li>
                     <li class="tab"><a href="#input">Input</a></li>
@@ -39,8 +40,10 @@
                     </div>
                     <div id="input" class="file-browser__strategy file-browser__strategy-input">
                         <i>Fill the path to the file you want to open and press "Open"</i>
-                        <input placeholder="File path" id="file-browser__input" type="text" class="validate">
-                        <button class="btn right" type="submit">Open</button>
+                        <form id="file-browser__input-form">
+                            <input placeholder="File path" id="file-browser__input-form__input" type="text" class="validate">
+                            <button id="file-browser__input-form__submit" class="btn right" type="submit">Open</button>
+                        </form>
                     </div>
                     <div id="browse" class="file-browser__strategy-browse">
                         <button class="btn right" id="goto-parent">Parent</button>
