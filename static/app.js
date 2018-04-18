@@ -9,11 +9,22 @@ LocalStorage.prototype.addFile = function(path) {
     if (!this.isAvailable) return;
 
     var items = this.getRecent();
+    var itemExists = false;
 
-    items.push({
-        path: path,
-        fileName: path.split('/').pop()
-    });
+    for (var i = 0; i < items.length; i++) {
+        if (items[i].path === path) {
+            itemExists = true;
+            items[i].when = new Date().getTime();
+        }
+    }
+
+    if (!itemExists) {
+        items.push({
+            when: new Date().getTime(),
+            path: path,
+            fileName: path.split('/').pop(),
+        });
+    }
 
     localStorage.setItem(this.recentItemsKey, JSON.stringify(items));
 }
@@ -27,7 +38,7 @@ LocalStorage.prototype.getRecent = function() {
         return [];
     }
 
-    return JSON.parse(localStorage.getItem(this.recentItemsKey));
+    return JSON.parse(localStorage.getItem(this.recentItemsKey)).sort(function(a, b) { return b.when - a.when; });
 }
 
 function App() {
