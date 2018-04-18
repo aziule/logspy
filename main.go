@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
-	"os"
-	"io/ioutil"
 )
 
 func main() {
@@ -25,21 +25,20 @@ func main() {
 }
 
 type Directory struct {
-	Path string `json:"path"`
-	Files []string `json:"files"`
+	Path        string   `json:"path"`
+	Files       []string `json:"files"`
 	Directories []string `json:"directories"`
 }
 
 func apiOpenFileAction(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query().Get("path")
 
-	if (path == "") {
+	if path == "" {
 		http.Error(w, "Missing parameter \"path\"", 400)
 		return
 	}
 
 	if _, err := os.Stat(path); err != nil {
-		log.Panic(err)
 		http.Error(w, "Could not open file or file does not exist", 400)
 		return
 	}
@@ -54,19 +53,15 @@ func apiOpenFileAction(w http.ResponseWriter, req *http.Request) {
 
 	go logFile.Tail()
 
-	j, err := json.Marshal("ok")
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	w.Write(j)
+	writeJson(w, map[string]interface{}{
+		"status": "ok",
+	})
 }
 
 func apiBrowseDirAction(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query().Get("path")
 
-	if (path == "") {
+	if path == "" {
 		wd, err := os.Getwd()
 
 		if err != nil {
@@ -77,19 +72,19 @@ func apiBrowseDirAction(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if _, err := os.Stat(path); err != nil {
-		log.Panic(err)
-		http.Error(w, "Directory does not exist", 400)
+		http.Error(w, "Directory does not exist", http.StatusBadRequest)
 		return
 	}
 
 	files, err := ioutil.ReadDir(path)
 
 	if err != nil {
-		log.Panic(err)
+		http.Error(w, "Directory not readable", http.StatusInternalServerError)
+		return
 	}
 
 	currentDir := &Directory{
-		Path: path,
+		Path:  path,
 		Files: []string{},
 	}
 
@@ -107,13 +102,7 @@ func apiBrowseDirAction(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	j, err := json.Marshal(currentDir)
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	w.Write(j)
+	writeJson(w, currentDir)
 }
 
 func apiLogsAction(w http.ResponseWriter, req *http.Request) {
@@ -139,10 +128,15 @@ func apiLogsAction(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	j, err := json.Marshal(logs)
+	writeJson(w, logs)
+}
+
+func writeJson(w http.ResponseWriter, v interface{}) {
+	j, err := json.Marshal(v)
 
 	if err != nil {
-		log.Panic(err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
 	}
 
 	w.Write(j)

@@ -26,13 +26,32 @@
         <div id="file-browser-wrapper">
             <div class="file-browser__shadow"></div>
             <div id="file-browser">
-                <div><b>Open log file</b></div>
-                <button class="btn right" id="goto-parent">Parent</button>
-                <div id="current-dir"></div>
-                <div id="files-explorer"></div>
+                <div class="file-browser__title"><b>Open a log file</b></div>
+                <ul class="tabs file-browser__tabs">
+                    <li class="tab"><a href="#recent" class="active">Recent</a></li>
+                    <li class="tab"><a href="#input">Input</a></li>
+                    <li class="tab"><a href="#browse">Browse</a></li>
+                </ul>
+                <div class="file-browser__strategies">
+                    <div id="recent" class="file-browser__strategy file-browser__strategy-recent">
+                        <i>Recently opened log files</i>
+                        <div id="recent-files"></div>
+                    </div>
+                    <div id="input" class="file-browser__strategy file-browser__strategy-input">
+                        <i>Fill the path to the file you want to open and press "Open"</i>
+                        <input placeholder="File path" id="file-browser__input" type="text" class="validate">
+                        <button class="btn right" type="submit">Open</button>
+                    </div>
+                    <div id="browse" class="file-browser__strategy-browse">
+                        <button class="btn right" id="goto-parent">Parent</button>
+                        <div id="files-explorer" class="clearfix"></div>
+                        <div id="current-dir"></div>
+                    </div>
+                </div>
             </div></div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

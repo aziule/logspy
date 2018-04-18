@@ -1,21 +1,59 @@
+M.AutoInit();
+
+function LocalStorage() {
+    this.recentItemsKey = 'recent';
+    this.isAvailable = typeof(Storage) !== 'undefined';
+};
+
+LocalStorage.prototype.addFile = function(path) {
+    if (!this.isAvailable) return;
+
+    var items = localStorage.getItem(this.recentItemsKey);
+
+    if (!items) items = [];
+
+    items.push({
+        path: path,
+        fileName: path.split('/').pop()
+    });
+
+    localStorage.setItem(this.recentItemsKey, JSON.stringify(items));
+}
+
+LocalStorage.prototype.getRecent = function() {
+    if (!this.isAvailable) return [];
+
+    return JSON.parse(localStorage.getItem(this.recentItemsKey));
+}
+
 function App() {
     this.isRunning = false;
 
     var apiClient = new ApiClient();
-    this.fileBrowser = new FileBrowser(apiClient);
+    var localStorage = new LocalStorage();
+    this.fileBrowser = new FileBrowser(apiClient, localStorage);
     this.logs = new Logs(apiClient);
 }
 
-function FileBrowser(apiClient) {
+function FileBrowser(apiClient, storage) {
+    this.strategies = {
+        RECENT: 'recent',
+        INPUT: 'input',
+        BROWSE: 'browse',
+    };
+    this.storage = storage;
     this.currentDirPath = '';
+    this.strategy = this.strategies.RECENT;
     this.openedFile = '';
     this.dirs = [];
     this.files = [];
     this.apiClient = apiClient;
+
     this.el = document.getElementById('file-browser');
     this.elWrapper = document.getElementById('file-browser-wrapper');
     this.elCurrentDir = document.getElementById('current-dir');
     this.elGotoParent = document.getElementById('goto-parent');
+    this.elRecentFiles = document.getElementById('recent-files');
     this.elFilesExplorer = document.getElementById('files-explorer');
 
     this.elGotoParent.onclick = function() {
@@ -51,6 +89,8 @@ FileBrowser.prototype.selectFile = function(path) {
         })
         .then(function() {
             this.openedFile = path;
+
+            this.storage.addFile(path);
             this.render();
         }.bind(this));
 }
@@ -60,6 +100,7 @@ FileBrowser.prototype.render = function() {
 
     this.elCurrentDir.innerHTML = self.currentDirPath;
     this.elFilesExplorer.innerHTML = '';
+    this.elRecentFiles.innerHTML = '';
 
     for (var index in this.dirs) {
         var dir = document.createElement('div');
@@ -81,6 +122,26 @@ FileBrowser.prototype.render = function() {
             var fileToSelect = (self.currentDirPath + '/' + this.innerHTML).replace('//', '');
             self.selectFile(fileToSelect);
         }
+    }
+
+    var recentFiles = this.storage.getRecent();
+
+    for (var index in recentFiles) {
+        var recentWrapper = document.createElement('div');
+        recentWrapper.className = 'recent-files__file';
+        recentWrapper.setAttribute('data-path', recentWrapper.path);
+
+        var recentFileName = document.createElement('div');
+        recentFileName.className = 'recent-files__file-name';
+        recentFileName.innerHTML = recentFiles[index].fileName;
+
+        var recentFilePath = document.createElement('div');
+        recentFilePath.className = 'recent-files__file-path';
+        recentFilePath.innerHTML = recentFiles[index].path;
+
+        recentWrapper.appendChild(recentFileName);
+        recentWrapper.appendChild(recentFilePath);
+        this.elRecentFiles.appendChild(recentWrapper);
     }
 
     this.elWrapper.className = this.openedFile ? 'hide' : '';

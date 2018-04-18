@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"regexp"
 	"time"
@@ -36,7 +35,7 @@ func (f *LogFile) Tail() {
 	defer tailChan.Stop()
 
 	if err != nil {
-		log.Panic(err)
+		return
 	}
 
 	f.TailChan = tailChan
