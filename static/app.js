@@ -1,5 +1,14 @@
 M.AutoInit();
 
+function App() {
+    this.isRunning = false;
+
+    var apiClient = new ApiClient();
+    var localStorage = new LocalStorage();
+    this.fileBrowser = new FileBrowser(apiClient, localStorage);
+    this.logs = new Logs(apiClient);
+}
+
 function LocalStorage() {
     this.recentItemsKey = 'recent';
     this.isAvailable = typeof(Storage) !== 'undefined';
@@ -39,15 +48,6 @@ LocalStorage.prototype.getRecent = function() {
     }
 
     return JSON.parse(localStorage.getItem(this.recentItemsKey)).sort(function(a, b) { return b.when - a.when; });
-}
-
-function App() {
-    this.isRunning = false;
-
-    var apiClient = new ApiClient();
-    var localStorage = new LocalStorage();
-    this.fileBrowser = new FileBrowser(apiClient, localStorage);
-    this.logs = new Logs(apiClient);
 }
 
 function FileBrowser(apiClient, storage) {
@@ -95,7 +95,7 @@ FileBrowser.prototype.browseDir = function(path) {
             this.render();
         }.bind(this))
         .catch(function(response) {
-            console.error(response.httpStatus, response.httpStatusText);
+            console.error(response.code, response.message);
         });
 }
 
@@ -110,9 +110,9 @@ FileBrowser.prototype.selectFile = function(path) {
         }.bind(this))
         .catch(function(response) {
             this.openedFile = '';
-            this.elError.innerHTML = response.httpStatusText;
+            this.elError.innerHTML = response.message;
             this.elError.classList.add('file-browser__error--active');
-            console.error(response.httpStatus, response.httpStatusText);
+            console.error(response.code, response.message);
         }.bind(this));
 }
 
@@ -191,23 +191,23 @@ function ApiClient() {
             xhr.open('GET', url);
 
             xhr.onload = function() {
-                if (this.status === 200) {
-                    var apiData = JSON.parse(this.responseText);
+                var apiData = JSON.parse(this.responseText);
 
+                if (this.status === 200) {
                     resolve(apiData);
                     return;
                 }
 
                 reject({
-                    httpStatus: this.status,
-                    httpStatusText: this.statusText
+                    code: apiData.code,
+                    message: apiData.message
                 });
             };
 
             xhr.onerror = function() {
                 reject({
-                    httpStatus: this.status,
-                    httpStatusText: this.statusText
+                    code: this.status,
+                    message: this.statusText
                 });
             };
 
@@ -267,7 +267,7 @@ Logs.prototype.fetchNewLogs = function() {
             this.render();
         }.bind(this))
         .catch(function(response) {
-            console.error(response.httpStatus, response.httpStatusText);
+            console.error(response.code, response.message);
         });
 }
 

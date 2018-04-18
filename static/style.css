@@ -31,7 +31,7 @@ td pre {
     -o-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
     width: 430px;
-    min-height: 482px;
+    min-height: 500px;
 }
 
 .file-browser__strategies i {
@@ -46,8 +46,9 @@ td pre {
 }
 
 #files-explorer {
-    height: 265px;
+    height: 266px;
     overflow-y: auto;
+    margin-bottom: 15px;
 }
 
 #files-explorer div {
@@ -84,12 +85,8 @@ td pre {
     clear: both;
 }
 
-.hidden {
-    display: none;
-}
-
 #recent-files {
-    min-height: 315px;
+    height: 315px;
     overflow-y: auto;
 }
 
@@ -116,4 +113,11 @@ td pre {
 
 .file-browser__error--active {
     display: block!important;
+}
+
+.recent-files__file-path {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    font-size: .9em;
+    color: #888;
 }
