@@ -8,9 +8,7 @@ function LocalStorage() {
 LocalStorage.prototype.addFile = function(path) {
     if (!this.isAvailable) return;
 
-    var items = localStorage.getItem(this.recentItemsKey);
-
-    if (!items) items = [];
+    var items = this.getRecent();
 
     items.push({
         path: path,
@@ -22,6 +20,12 @@ LocalStorage.prototype.addFile = function(path) {
 
 LocalStorage.prototype.getRecent = function() {
     if (!this.isAvailable) return [];
+
+    var raw = localStorage.getItem(this.recentItemsKey);
+
+    if (!raw) {
+        return [];
+    }
 
     return JSON.parse(localStorage.getItem(this.recentItemsKey));
 }
@@ -129,7 +133,11 @@ FileBrowser.prototype.render = function() {
     for (var index in recentFiles) {
         var recentWrapper = document.createElement('div');
         recentWrapper.className = 'recent-files__file';
-        recentWrapper.setAttribute('data-path', recentWrapper.path);
+        recentWrapper.setAttribute('data-path', recentFiles[index].path);
+        recentWrapper.onclick = function() {
+            var path = this.getAttribute('data-path');
+            self.selectFile(path);
+        };
 
         var recentFileName = document.createElement('div');
         recentFileName.className = 'recent-files__file-name';
