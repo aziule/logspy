@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>proj</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<head>
+    <title>Aziule's Simple Logs GUI</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+    <section id="app">
+        <div class="row">
+            <div class="col s12">
+                <table id="logs">
+                    <tr>
+                        <th>Time</th>
+                        <th>Level</th>
+                        <th>Message</th>
+                        <th>Contextual Info</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div id="file-browser-wrapper">
+            <div class="file-browser__shadow"></div>
+            <div id="file-browser">
+                <div class="file-browser__title"><b>Open a log file</b></div>
+                <div id="file-browser__error"></div>
+                <ul class="tabs file-browser__tabs">
+                    <li class="tab"><a href="#recent" class="active">Recent</a></li>
+                    <li class="tab"><a href="#input">Input</a></li>
+                    <li class="tab"><a href="#browse">Browse</a></li>
+                </ul>
+                <div class="file-browser__strategies">
+                    <div id="recent" class="file-browser__strategy file-browser__strategy-recent">
+                        <i>Recently opened log files</i>
+                        <div id="recent-files"></div>
+                    </div>
+                    <div id="input" class="file-browser__strategy file-browser__strategy-input">
+                        <i>Fill the path to the file you want to open and press "Open"</i>
+                        <form id="file-browser__input-form">
+                            <input placeholder="File path" id="file-browser__input-form__input" type="text" class="validate">
+                            <button id="file-browser__input-form__submit" class="btn right" type="submit">Open</button>
+                        </form>
+                    </div>
+                    <div id="browse" class="file-browser__strategy-browse">
+                        <button class="btn right" id="goto-parent">Parent</button>
+                        <div id="files-explorer" class="clearfix"></div>
+                        <div id="current-dir"></div>
+                    </div>
+                </div>
+            </div></div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
 </html>

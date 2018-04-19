@@ -5,12 +5,12 @@
   "author": "Will <willyboy_43@hotmail.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config frontend/build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "unit": "jest --config test/unit/jest.conf.js --coverage",
+    "unit": "jest --config frontend/test/unit/jest.conf.js --coverage",
     "test": "npm run unit",
-    "lint": "eslint --ext .js,.vue src test/unit",
-    "build": "node build/build.js"
+    "lint": "eslint --ext .js,.vue src frontend/test/unit",
+    "build": "node frontend/build/build.js"
   },
   "dependencies": {
     "vue": "^2.5.2",
