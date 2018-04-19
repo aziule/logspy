@@ -9,16 +9,17 @@ import (
 
 // TODO: add some inheritance for Path and Logs
 type locallyListenedLogFile struct {
-	Path     string
+	*logFileInfo
 	TailChan *tail.Tail
-	Logs     []*log.Log
 }
 
 // createLocallyListenedFile creates an instance of locallyListenedLogFile and initialises it
 // but without starting to listen to it
 func createLocallyListenedFile(path string) ListenedLogFile {
 	return &locallyListenedLogFile{
-		Path: path,
+		logFileInfo: &logFileInfo{
+			Path: path,
+		},
 	}
 }
 
@@ -45,8 +46,4 @@ func (f *locallyListenedLogFile) Listen() error {
 
 func (f *locallyListenedLogFile) StopListening() {
 	f.TailChan.StopAtEOF()
-}
-
-func (f *locallyListenedLogFile) GetLogs() []*log.Log {
-	return f.Logs
 }

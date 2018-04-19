@@ -17,12 +17,9 @@ var (
 	ErrCannotExecuteTail   = errors.New("Cannot execute tail on remote server")
 )
 
-// TODO: add some inheritance for Path and Logs
 type remotelyListenedLogFile struct {
-	Path     string
-	Client   *ssh.Client
-	TailChan chan Message
-	Logs     []*log.Log
+	*logFileInfo
+	Client *ssh.Client
 }
 
 // Message is the struct used to transfer data from the remote server
@@ -41,9 +38,10 @@ func createRemotelyListenedFile(path string) ListenedLogFile {
 	}
 
 	return &remotelyListenedLogFile{
-		Path:     path,
-		Client:   client,
-		TailChan: make(chan Message, 1),
+		logFileInfo: &logFileInfo{
+			Path: path,
+		},
+		Client: client,
 	}
 }
 
@@ -98,7 +96,7 @@ func (f *remotelyListenedLogFile) Listen() error {
 	return nil
 }
 
-// TODO: move this and check how to properly close it
+// readFile reads a file line by line and appends logs to the main struct
 func (f *remotelyListenedLogFile) readFile(input *io.Reader) error {
 	reader := bufio.NewReader(*input)
 
@@ -121,8 +119,4 @@ func (f *remotelyListenedLogFile) readFile(input *io.Reader) error {
 
 func (f *remotelyListenedLogFile) StopListening() {
 	f.Client.Close()
-}
-
-func (f *remotelyListenedLogFile) GetLogs() []*log.Log {
-	return f.Logs
 }

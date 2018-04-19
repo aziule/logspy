@@ -83,6 +83,8 @@ function FileBrowser(apiClient, storage) {
 }
 
 FileBrowser.prototype.browseDir = function(path) {
+    return;
+
     if (path === undefined) path = '';
 
     this.apiClient.browseDir(path)

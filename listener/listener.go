@@ -29,6 +29,19 @@ type ListenedLogFile interface {
 	GetLogs() []*log.Log
 }
 
+type logFileInfo struct {
+	Logs []*log.Log
+	Path string
+}
+
+func (f *logFileInfo) GetLogs() []*log.Log {
+	return f.Logs
+}
+
+func (f *logFileInfo) GetPath() string {
+	return f.Path
+}
+
 // GetLogs returns the current listened file's logs since a specific date
 func GetLogs(since time.Time) ([]*log.Log, error) {
 	if listenedLogFile == nil {
@@ -57,7 +70,7 @@ func ListenToFile(path string, strategy Strategy) error {
 
 	switch strategy {
 	case LocalListeningStrategy:
-		file = createRemotelyListenedFile(path)
+		file = createLocallyListenedFile(path)
 		break
 	case RemoteListeningStrategy:
 		file = createRemotelyListenedFile(path)
