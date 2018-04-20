@@ -16,7 +16,7 @@ func main() {
 
 	api := &api.Api{}
 
-	http.Handle("/", http.FileServer(http.Dir("frontend")))
+	http.Handle("/", http.FileServer(http.Dir("frontend/dist")))
 	http.HandleFunc("/api/open", api.HandleOpenFile)
 	http.HandleFunc("/api/logs", api.HandleGetLogs)
 	//http.HandleFunc("/api/browse", api.HandleBrowse)

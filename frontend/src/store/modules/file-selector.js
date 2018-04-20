@@ -1,36 +1,52 @@
 import * as actionsList from '@/store/actions-list'
+import httpClient from '@/services/http-client'
+
+const types = {
+    LOADING: 'LOADING',
+    DONE_LOADING: 'DONE_LOADING',
+    ERROR: 'ERROR',
+    OPEN_FILE: 'OPEN_FILE'
+}
 
 const state = {
     openedFile: null,
-    error: null,
-    isDisplayed: true
-}
-
-const getters = {
-    isFileSelectorDisplayed: state => state.isDisplayed
+    isLoading: false
 }
 
 const mutations = {
-    showFileSelector (state) {
-        state.isDisplayed = true
+    [types.LOADING] (state) {
+        state.isLoading = true
     },
-    hideFileSelector (state) {
-        state.isDisplayed = false
+    [types.DONE_LOADING] (state) {
+        state.isLoading = false
+    },
+    [types.OPEN_FILE] (state, path) {
+        state.openedFile = path
     }
 }
 
 const actions = {
-    [actionsList.SHOW_FILE_SELECTOR] ({ commit }) {
-        commit('showFileSelector')
-    },
-    [actionsList.HIDE_FILE_SELECTOR] ({ commit }) {
-        commit('hideFileSelector')
+    async [actionsList.OPEN_LOCAL_LOG_FILE] ({ state, commit, dispatch }, path) {
+        if (state.isLoading) return
+
+        commit(types.LOADING)
+
+        return new Promise((resolve, reject) => {
+            httpClient.get('/api/open?path=' + path)
+                .then(() => {
+                    commit(types.DONE_LOADING)
+                    commit(types.OPEN_FILE, path)
+                    resolve()
+                }).catch((msg) => {
+                    commit(types.DONE_LOADING)
+                    reject(new Error(msg))
+                })
+        })
     }
 }
 
 export default {
     state,
     actions,
-    mutations,
-    getters
+    mutations
 }

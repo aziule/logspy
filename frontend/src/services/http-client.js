@@ -1,36 +1,28 @@
-"use strict"
-
 const httpClient = {
-    getJSON: (url) => {
-        return new Promise(function(resolve, reject) {
-            var xhr = new XMLHttpRequest();
+    get: (url) => {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest()
 
-            xhr.open('GET', url);
+            xhr.open('GET', url)
 
-            xhr.onload = function() {
-                var apiData = JSON.parse(this.responseText);
+            xhr.onload = () => {
+                var apiData = JSON.parse(xhr.responseText)
 
-                if (this.status === 200) {
-                    resolve(apiData);
-                    return;
+                if (xhr.status === 200) {
+                    resolve(apiData)
+                    return
                 }
 
-                reject({
-                    code: apiData.code,
-                    message: apiData.message
-                });
-            };
+                reject(new Error(apiData.message))
+            }
 
-            xhr.onerror = function() {
-                reject({
-                    httpStatus: this.status,
-                    httpStatusText: this.statusText
-                });
-            };
+            xhr.onerror = () => {
+                reject(new Error(xhr.statusText))
+            }
 
-            xhr.send();
-        });
+            xhr.send()
+        })
     }
 }
 
-export default httpClient;
+export default httpClient
