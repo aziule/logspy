@@ -26,6 +26,7 @@ export default {
             this.$store.dispatch(actionsList.OPEN_LOCAL_LOG_FILE, this.localFilePath)
                 .then(() => {
                     this.$emit('onLogFileOpened')
+                    this.$store.dispatch(actionsList.READ_LOG_FILE)
                 }).catch((e) => {
                     this.$emit('onError', e)
                 })

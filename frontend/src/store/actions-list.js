@@ -1,1 +1,4 @@
 export const OPEN_LOCAL_LOG_FILE = 'OPEN_LOCAL_LOG_FILE'
+export const OPEN_REMOTE_LOG_FILE = 'OPEN_REMOTE_LOG_FILE'
+export const READ_LOG_FILE = 'READ_LOG_FILE'
+export const NEW_LOGS = 'NEW_LOGS'

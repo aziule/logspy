@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import TabLocalFile from '@/components/file-selector/TabLocalFile'
 import TabRemoteFile from '@/components/file-selector/TabRemoteFile'
 
@@ -36,10 +35,6 @@ export default {
             error: null
         }
     },
-    computed: mapState({
-        isLoading: state => state.fileSelector.isLoading,
-        openedFile: state => state.fileSelector.openedFile
-    }),
     methods: {
         selectTab (name) {
             this.activeTab = name

@@ -7,8 +7,8 @@ import (
 	"github.com/aziule/simple-logs-gui/listener"
 )
 
-// HandleOpenFile starts tailing a log file
-func (api *Api) HandleOpenFile(w http.ResponseWriter, req *http.Request) {
+// HandleOpenLocalFile starts tailing a local log file
+func (api *Api) HandleOpenLocalFile(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query().Get("path")
 
 	if path == "" {
@@ -22,6 +22,27 @@ func (api *Api) HandleOpenFile(w http.ResponseWriter, req *http.Request) {
 	}
 
 	err := listener.ListenToFile(path, listener.LocalListeningStrategy)
+
+	if err != nil {
+		api.writeError(w, err.Error(), 500)
+		return
+	}
+
+	api.writeJson(w, map[string]interface{}{
+		"status": "ok",
+	})
+}
+
+// HandleOpenFile starts tailing a remote log file
+func (api *Api) HandleOpenRemoteFile(w http.ResponseWriter, req *http.Request) {
+	path := req.URL.Query().Get("path")
+
+	if path == "" {
+		api.writeError(w, "Missing parameter \"path\"", 400)
+		return
+	}
+
+	err := listener.ListenToFile(path, listener.RemoteListeningStrategy)
 
 	if err != nil {
 		api.writeError(w, err.Error(), 500)

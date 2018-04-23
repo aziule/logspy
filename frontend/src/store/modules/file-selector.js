@@ -26,13 +26,30 @@ const mutations = {
 }
 
 const actions = {
-    async [actionsList.OPEN_LOCAL_LOG_FILE] ({ state, commit, dispatch }, path) {
+    [actionsList.OPEN_LOCAL_LOG_FILE] ({ state, commit }, path) {
         if (state.isLoading) return
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
-            httpClient.get('/api/open?path=' + path)
+            httpClient.get('/api/open/local?path=' + path)
+                .then(() => {
+                    commit(types.DONE_LOADING)
+                    commit(types.OPEN_FILE, path)
+                    resolve()
+                }).catch((msg) => {
+                    commit(types.DONE_LOADING)
+                    reject(new Error(msg))
+                })
+        })
+    },
+    [actionsList.OPEN_REMOTE_LOG_FILE] ({ state, commit }, path) {
+        if (state.isLoading) return
+
+        commit(types.LOADING)
+
+        return new Promise((resolve, reject) => {
+            httpClient.get('/api/open/remote?path=' + path)
                 .then(() => {
                     commit(types.DONE_LOADING)
                     commit(types.OPEN_FILE, path)
