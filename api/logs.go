@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/aziule/simple-logs-gui/listener"
+	"github.com/aziule/simple-logs-gui/log"
 )
 
 func (api *Api) HandleGetLogs(w http.ResponseWriter, req *http.Request) {
@@ -23,6 +24,10 @@ func (api *Api) HandleGetLogs(w http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		api.writeError(w, err.Error(), 400)
+	}
+
+	if logs == nil {
+		logs = make([]*log.Log, 0)
 	}
 
 	api.writeJson(w, logs)
