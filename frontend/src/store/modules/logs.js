@@ -69,6 +69,9 @@ const actions = {
 
                     commit(types.APPEND_LOGS, logs)
                     commit(types.DONE_LOADING)
+
+                    dispatch(actionsList.NEW_LOGS, logs)
+
                     resolve()
                 }).catch((msg) => {
                     commit(types.DONE_LOADING)

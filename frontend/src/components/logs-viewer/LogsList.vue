@@ -1,5 +1,5 @@
 <template>
-    <table>
+    <table class="striped highlight">
         <thead>
             <tr>
                 <th>ID</th>
@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <LogItem v-for="(log, index) in logs" v-bind:log="log" v-bind:key="index"/>
+            <LogItem v-for="(log, index) in filteredLogs" v-bind:log="log" v-bind:key="index"/>
         </tbody>
     </table>
 </template>
@@ -21,11 +21,29 @@ import LogItem from '@/components/logs-viewer/LogItem'
 
 export default {
     name: 'LogsList',
-    computed: mapGetters([
-        'logs'
-    ]),
+    computed: {
+        ...mapGetters([
+            'logs',
+            'filters'
+        ]),
+        filteredLogs () {
+            return this.logs.filter((log) => {
+                if (this.filters.level && this.filters.level !== log.level) {
+                    return false
+                }
+
+                return true
+            })
+        }
+    },
     components: {
         LogItem
     }
 }
 </script>
+
+<style>
+tbody tr:hover {
+    background-color: #eee!important
+}
+</style>

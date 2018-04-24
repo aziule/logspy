@@ -24,6 +24,9 @@ export default {
 </script>
 
 <style>
+select:focus {
+    outline: none;
+}
 .error {
     padding: 15px;
     color: white;

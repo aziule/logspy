@@ -7,12 +7,14 @@
                 <div class="row">
                     <div class="col s12">
                         <ul class="tabs">
+                            <li class="tab" v-bind:class="{ active: activeTab === 'recent' }" @click="selectTab('recent')">Recently opened</li>
                             <li class="tab" v-bind:class="{ active: activeTab === 'local' }" @click="selectTab('local')">Local file</li>
                             <li class="tab" v-bind:class="{ active: activeTab === 'remote' }" @click="selectTab('remote')">Remote file</li>
                         </ul>
                     </div>
                     <div class="col s12">
                         <div class="error" v-if="error">{{ error }}</div>
+                        <tab-recent-file v-if="activeTab == 'recent'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
                         <tab-local-file v-if="activeTab == 'local'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
                         <tab-remote-file v-if="activeTab == 'remote'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
                     </div>
@@ -24,13 +26,14 @@
 
 <script>
 import TabLocalFile from '@/components/file-selector/TabLocalFile'
+import TabRecentFile from '@/components/file-selector/TabRecentFile'
 import TabRemoteFile from '@/components/file-selector/TabRemoteFile'
 
 export default {
     name: 'FileSelector',
     data: () => {
         return {
-            activeTab: 'local',
+            activeTab: 'recent',
             isVisible: true,
             error: null
         }
@@ -49,6 +52,7 @@ export default {
     },
     components: {
         TabLocalFile,
+        TabRecentFile,
         TabRemoteFile
     }
 }

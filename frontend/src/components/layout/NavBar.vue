@@ -1,15 +1,18 @@
 <template>
     <nav>
         <div class="nav-wrapper">
-            <span class="brand-logo center">Aziule</span>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-            </ul>
+            <Filters />
         </div>
     </nav>
 </template>
 
 <script>
+import Filters from '@/components/logs-viewer/Filters'
+
 export default {
-    name: 'NavBar'
+    name: 'NavBar',
+    components: {
+        Filters
+    }
 }
 </script>
