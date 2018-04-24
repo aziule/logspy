@@ -2,7 +2,6 @@ package listener
 
 import (
 	"errors"
-	"time"
 
 	"github.com/aziule/simple-logs-gui/log"
 )
@@ -42,8 +41,8 @@ func (f *logFileInfo) GetPath() string {
 	return f.Path
 }
 
-// GetLogs returns the current listened file's logs since a specific date
-func GetLogs(since time.Time) ([]*log.Log, error) {
+// GetLogs returns the current listened file's logs since a specific id
+func GetLogs(sinceId int) ([]*log.Log, error) {
 	if listenedLogFile == nil {
 		return nil, ErrNotListening
 	}
@@ -51,7 +50,7 @@ func GetLogs(since time.Time) ([]*log.Log, error) {
 	var logs []*log.Log
 
 	for _, log := range listenedLogFile.GetLogs() {
-		if since.Before(log.Time) {
+		if log.Id > sinceId {
 			logs = append(logs, log)
 		}
 	}

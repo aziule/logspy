@@ -111,6 +111,8 @@ func (f *remotelyListenedLogFile) readFile(input *io.Reader) error {
 		}
 
 		parsedLog := log.ParseString(string(line))
+		parsedLog.Id = len(f.Logs) + 1
+
 		f.Logs = append(f.Logs, parsedLog)
 	}
 

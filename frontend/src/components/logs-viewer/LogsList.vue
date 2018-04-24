@@ -2,6 +2,7 @@
     <table>
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Time</th>
                 <th>Level</th>
                 <th>Message</th>

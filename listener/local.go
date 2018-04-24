@@ -38,6 +38,8 @@ func (f *locallyListenedLogFile) Listen() error {
 
 	for line := range f.TailChan.Lines {
 		parsedLog := log.ParseString(line.Text)
+		parsedLog.Id = len(f.Logs) + 1
+
 		f.Logs = append(f.Logs, parsedLog)
 	}
 

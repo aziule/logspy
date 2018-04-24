@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>Open a file located on your machine</p>
+        <p>Open a file located on a remote server using SSH</p>
         <form v-on:submit="openRemoteFile">
             <div class="input-field">
                 <input placeholder="/path/to/file.log" id="file_path" type="text" class="validate" v-model="remoteFilePath" required>
