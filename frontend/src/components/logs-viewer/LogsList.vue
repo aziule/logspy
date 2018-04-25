@@ -1,11 +1,17 @@
 <template>
-    <table class="striped highlight">
-        <thead>
+    <table class="striped highlight grey lighten-5">
+        <thead class="red accent-1">
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Time</th>
-                <th>Level</th>
-                <th>Message</th>
+                <th>
+                    Level
+                    <Level />
+                </th>
+                <th>
+                    Message
+                    <Message />
+                </th>
                 <th>Contextual Info</th>
             </tr>
         </thead>
@@ -18,6 +24,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import LogItem from '@/components/logs-viewer/LogItem'
+import Level from '@/components/logs-viewer/filters/Level'
+import Message from '@/components/logs-viewer/filters/Message'
 
 export default {
     name: 'LogsList',
@@ -32,17 +40,26 @@ export default {
                     return false
                 }
 
+                if (this.filters.message) {
+                    return log.message.toLowerCase().includes(this.filters.message.toLowerCase())
+                }
+
                 return true
             })
         }
     },
     components: {
-        LogItem
+        LogItem,
+        Level,
+        Message
     }
 }
 </script>
 
 <style>
+table th {
+    vertical-align: top;
+}
 tbody tr:hover {
     background-color: #eee!important
 }

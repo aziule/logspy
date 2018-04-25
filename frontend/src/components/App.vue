@@ -1,6 +1,5 @@
 <template>
     <div>
-        <nav-bar/>
         <LogsList/>
         <FileSelector/>
     </div>
@@ -8,13 +7,11 @@
 
 <script>
 import store from '@/store'
-import NavBar from '@/components/layout/NavBar'
 import FileSelector from '@/components/file-selector/FileSelector'
 import LogsList from '@/components/logs-viewer/LogsList'
 
 export default {
     components: {
-        NavBar,
         FileSelector,
         LogsList
     },

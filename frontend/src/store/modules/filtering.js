@@ -2,13 +2,15 @@ import * as actionsList from '@/store/actions-list'
 
 const types = {
     ADD_LEVEL: 'ADD_LEVEL',
-    SET_FILTER_LEVEL: 'SET_FILTER_LEVEL'
+    SET_FILTER_LEVEL: 'SET_FILTER_LEVEL',
+    SET_FILTER_MESSAGE: 'SET_FILTER_MESSAGE'
 }
 
 const state = {
     levels: [],
     filters: {
-        level: null
+        level: null,
+        message: ''
     }
 }
 
@@ -23,6 +25,9 @@ const mutations = {
     },
     [types.SET_FILTER_LEVEL] (state, level) {
         state.filters.level = level
+    },
+    [types.SET_FILTER_MESSAGE] (state, message) {
+        state.filters.message = message
     }
 }
 
@@ -34,8 +39,11 @@ const actions = {
             if (logs[i].level && state.levels.indexOf(logs[i].level) === -1) commit(types.ADD_LEVEL, logs[i].level)
         }
     },
-    [actionsList.FILTER_BY_LEVEL] ({ state, commit }, level) {
+    [actionsList.FILTER_BY_LEVEL] ({ commit }, level) {
         commit(types.SET_FILTER_LEVEL, level)
+    },
+    [actionsList.FILTER_BY_MESSAGE] ({ commit }, message) {
+        commit(types.SET_FILTER_MESSAGE, message)
     }
 }
 

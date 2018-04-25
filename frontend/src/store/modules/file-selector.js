@@ -13,6 +13,10 @@ const state = {
     isLoading: false
 }
 
+const getters = {
+    openedFile: state => state.openedFile
+}
+
 const mutations = {
     [types.LOADING] (state) {
         state.isLoading = true
@@ -65,5 +69,6 @@ const actions = {
 export default {
     state,
     actions,
-    mutations
+    mutations,
+    getters
 }
