@@ -4,7 +4,7 @@
         <td>{{ log.time|date }}</td>
         <td>{{ log.level }}</td>
         <td v-html="logMessage"></td>
-        <td><pre>{{ log.contextual_info }}</pre></td>
+        <td><pre>{{ log.contextual_info|pretty }}</pre></td>
     </tr>
 </template>
 
@@ -36,6 +36,9 @@ export default {
     filters: {
         date: (date) => {
             return new Date(date).toLocaleString()
+        },
+        pretty: (data) => {
+            return JSON.stringify(JSON.parse(data), null, 4)
         }
     }
 }
