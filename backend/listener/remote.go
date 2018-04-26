@@ -5,9 +5,10 @@ import (
 	"errors"
 	"io"
 
-	"github.com/aziule/simple-logs-gui/log"
-	"github.com/aziule/simple-logs-gui/ssh"
+	"github.com/aziule/simple-logs-gui/backend/log"
+	"github.com/aziule/simple-logs-gui/backend/ssh"
 	cssh "golang.org/x/crypto/ssh"
+	"fmt"
 )
 
 var (
@@ -30,11 +31,11 @@ type Message struct {
 
 // createLocallyListenedFile creates an instance of remotelyListenedLogFile and initialises it
 // but without starting to listen to it
-func createRemotelyListenedFile(path string) ListenedLogFile {
+func createRemotelyListenedFile(path string, config StrategyConfig) ListenedLogFile {
 	client := &ssh.Client{
-		Host:           "www119.avantiplc.net:22",
-		User:           "wclaude",
-		PrivateKeyPath: "/home/will/.ssh/id_rsa",
+		Host:           config["host"].(string),//"www119.avantiplc.net:22",
+		User:           config["username"].(string),//"wclaude",
+		PrivateKeyPath: config["ssh_key_path"].(string),//"/home/will/.ssh/id_rsa",
 	}
 
 	return &remotelyListenedLogFile{
@@ -48,6 +49,7 @@ func createRemotelyListenedFile(path string) ListenedLogFile {
 // Listen starts listening for incoming logs and stores them
 func (f *remotelyListenedLogFile) Listen() error {
 	if err := f.Client.Connect(); err != nil {
+		fmt.Sprintf(err.Error())
 		return err
 	}
 
@@ -83,9 +85,7 @@ func (f *remotelyListenedLogFile) Listen() error {
 		return err
 	}
 
-	// tail -f /opt/webapp/cd026c6fb3c820bf48aa56cb7fa16010af06da0a69bebf4592d93e113af616f0d3a083c0f51c61760c30380e2a8e6510bd8e4f3cbee365716c8f42019ba539cd/symfony/var/logs/prod.log
-	//if err = session.Start("tail -f /tmp/test"); err != nil {
-	if err = session.Start("tail -f /opt/webapp/cd026c6fb3c820bf48aa56cb7fa16010af06da0a69bebf4592d93e113af616f0d3a083c0f51c61760c30380e2a8e6510bd8e4f3cbee365716c8f42019ba539cd/symfony/var/logs/prod.log"); err != nil {
+	if err = session.Start(fmt.Sprintf("tail -f %s", f.Path)); err != nil {
 		return ErrCannotExecuteTail
 	}
 

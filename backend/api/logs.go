@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/aziule/simple-logs-gui/listener"
-	"github.com/aziule/simple-logs-gui/log"
+	"github.com/aziule/simple-logs-gui/backend/listener"
+	"github.com/aziule/simple-logs-gui/backend/log"
 )
 
 func (api *Api) HandleGetLogs(w http.ResponseWriter, req *http.Request) {

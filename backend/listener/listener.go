@@ -3,7 +3,7 @@ package listener
 import (
 	"errors"
 
-	"github.com/aziule/simple-logs-gui/log"
+	"github.com/aziule/simple-logs-gui/backend/log"
 )
 
 const (
@@ -20,6 +20,7 @@ var (
 )
 
 type Strategy int
+type StrategyConfig map[string]interface{}
 
 // ListenedLogFile is the interface we use to store / fetch logs from a file
 type ListenedLogFile interface {
@@ -59,7 +60,7 @@ func GetLogs(sinceId int) ([]*log.Log, error) {
 }
 
 // ListenToFile starts listening to a file given its path and its listening strategy
-func ListenToFile(path string, strategy Strategy) error {
+func ListenToFile(path string, strategy Strategy, config StrategyConfig) error {
 	var file ListenedLogFile
 
 	if listenedLogFile != nil {
@@ -72,7 +73,7 @@ func ListenToFile(path string, strategy Strategy) error {
 		file = createLocallyListenedFile(path)
 		break
 	case RemoteListeningStrategy:
-		file = createRemotelyListenedFile(path)
+		file = createRemotelyListenedFile(path, config)
 		break
 	default:
 		return ErrInvalidStrategy

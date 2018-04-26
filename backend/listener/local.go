@@ -3,7 +3,7 @@ package listener
 import (
 	"os"
 
-	"github.com/aziule/simple-logs-gui/log"
+	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/hpcloud/tail"
 )
 

@@ -1,24 +1,29 @@
 <template>
-    <table class="striped highlight grey lighten-5">
-        <thead class="red accent-1">
-            <tr>
-                <th>#</th>
-                <th>Time</th>
-                <th>
-                    Level
-                    <Level />
-                </th>
-                <th>
-                    Message
-                    <Message />
-                </th>
-                <th>Contextual Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            <LogItem v-for="(log, index) in filteredLogs" v-bind:log="log" v-bind:key="index"/>
-        </tbody>
-    </table>
+    <div>
+        <table class="striped highlight grey lighten-5">
+            <thead class="red accent-1">
+                <tr>
+                    <th>#</th>
+                    <th>Time</th>
+                    <th>
+                        Level
+                        <Level />
+                    </th>
+                    <th>
+                        Message
+                        <Message />
+                    </th>
+                    <th>Contextual Info</th>
+                </tr>
+            </thead>
+            <tbody v-if="logs.length > 0">
+                <LogItem v-for="(log, index) in filteredLogs" v-bind:log="log" v-bind:key="index"/>
+            </tbody>
+        </table>
+        <div class="no-logs" v-if="logs.length === 0">
+            There are no logs at the moment
+        </div>
+    </div>
 </template>
 
 <script>
@@ -59,8 +64,21 @@ export default {
 <style>
 table th {
     vertical-align: top;
+    font-weight: 500;
 }
 tbody tr:hover {
     background-color: #eee!important
+}
+.no-logs {
+    position: absolute;
+    top: 98px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
 }
 </style>

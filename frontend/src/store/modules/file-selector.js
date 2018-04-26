@@ -47,16 +47,16 @@ const actions = {
                 })
         })
     },
-    [actionsList.OPEN_REMOTE_LOG_FILE] ({ state, commit }, path) {
+    [actionsList.OPEN_REMOTE_LOG_FILE] ({ state, commit }, payload) {
         if (state.isLoading) return
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
-            httpClient.get('/api/open/remote?path=' + path)
+            httpClient.get(encodeURI('/api/open/remote?host=' + payload.host + '&username=' + payload.username + '&sshKeyPath=' + payload.sshKeyPath + '&path=' + payload.logFilePath))
                 .then(() => {
                     commit(types.DONE_LOADING)
-                    commit(types.OPEN_FILE, path)
+                    commit(types.OPEN_FILE, payload.logFilePath)
                     resolve()
                 }).catch((msg) => {
                     commit(types.DONE_LOADING)

@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aziule/simple-logs-gui/listener"
+	"github.com/aziule/simple-logs-gui/backend/listener"
 )
 
 // HandleOpenLocalFile starts tailing a local log file
@@ -21,7 +21,7 @@ func (api *Api) HandleOpenLocalFile(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err := listener.ListenToFile(path, listener.LocalListeningStrategy)
+	err := listener.ListenToFile(path, listener.LocalListeningStrategy, nil)
 
 	if err != nil {
 		api.writeError(w, err.Error(), 500)
@@ -35,14 +35,40 @@ func (api *Api) HandleOpenLocalFile(w http.ResponseWriter, req *http.Request) {
 
 // HandleOpenFile starts tailing a remote log file
 func (api *Api) HandleOpenRemoteFile(w http.ResponseWriter, req *http.Request) {
-	path := req.URL.Query().Get("path")
+	logFilePath := req.URL.Query().Get("path")
 
-	if path == "" {
+	if logFilePath == "" {
 		api.writeError(w, "Missing parameter \"path\"", 400)
 		return
 	}
 
-	err := listener.ListenToFile(path, listener.RemoteListeningStrategy)
+	host := req.URL.Query().Get("host")
+
+	if host == "" {
+		api.writeError(w, "Missing parameter \"host\"", 400)
+		return
+	}
+
+	username := req.URL.Query().Get("username")
+
+	if username == "" {
+		api.writeError(w, "Missing parameter \"username\"", 400)
+		return
+	}
+
+	sshKeyPath := req.URL.Query().Get("sshKeyPath")
+
+	if sshKeyPath == "" {
+		api.writeError(w, "Missing parameter \"sshKeyPath\"", 400)
+		return
+	}
+
+	var config = make(map[string]interface{})
+	config["host"] = host
+	config["username"] = username
+	config["ssh_key_path"] = sshKeyPath
+
+	err := listener.ListenToFile(logFilePath, listener.RemoteListeningStrategy, config)
 
 	if err != nil {
 		api.writeError(w, err.Error(), 500)

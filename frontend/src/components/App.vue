@@ -1,11 +1,12 @@
 <template>
     <div>
-        <LogsList/>
-        <FileSelector/>
+        <LogsList v-if="openedFile" />
+        <FileSelector v-if="!openedFile" />
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import store from '@/store'
 import FileSelector from '@/components/file-selector/FileSelector'
 import LogsList from '@/components/logs-viewer/LogsList'
@@ -16,7 +17,12 @@ export default {
         LogsList
     },
     name: 'App',
-    store
+    store,
+    computed: {
+        ...mapGetters([
+            'openedFile'
+        ])
+    }
 }
 </script>
 

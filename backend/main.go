@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/aziule/simple-logs-gui/api"
+	"github.com/aziule/simple-logs-gui/backend/api"
 )
 
 func main() {
@@ -16,11 +16,10 @@ func main() {
 
 	api := &api.Api{}
 
-	http.Handle("/", http.FileServer(http.Dir("frontend/dist")))
+	http.Handle("/", http.FileServer(http.Dir("../frontend/dist")))
 	http.HandleFunc("/api/open/local", api.HandleOpenLocalFile)
 	http.HandleFunc("/api/open/remote", api.HandleOpenRemoteFile)
 	http.HandleFunc("/api/logs", api.HandleGetLogs)
-	//http.HandleFunc("/api/browse", api.HandleBrowse)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }
