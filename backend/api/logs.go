@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/aziule/simple-logs-gui/backend/listener"
-	"github.com/aziule/simple-logs-gui/backend/log"
 )
 
 func (api *Api) HandleGetLogs(w http.ResponseWriter, req *http.Request) {
@@ -22,10 +21,6 @@ func (api *Api) HandleGetLogs(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		api.writeError(w, err.Error(), 400)
 		return
-	}
-
-	if logs == nil {
-		logs = make([]*log.Log, 0)
 	}
 
 	api.writeJson(w, logs)

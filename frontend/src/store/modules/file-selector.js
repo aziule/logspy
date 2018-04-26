@@ -53,7 +53,7 @@ const actions = {
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
-            httpClient.get(encodeURI('/api/open/remote?host=' + payload.host + '&username=' + payload.username + '&sshKeyPath=' + payload.sshKeyPath + '&path=' + payload.logFilePath))
+            httpClient.get(encodeURI('/api/open/remote?host=' + payload.remoteServer.host + '&username=' + payload.remoteServer.username + '&sshKeyPath=' + payload.remoteServer.ssh_key_path + '&path=' + payload.logFilePath))
                 .then(() => {
                     commit(types.DONE_LOADING)
                     commit(types.OPEN_FILE, payload.logFilePath)

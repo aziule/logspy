@@ -6,6 +6,7 @@ import (
 )
 
 var regex, _ = regexp.Compile(`^\[([\d]{4}-[\d]{2}-[\d]{2}\s[\d]{2}:[\d]{2}:[\d]{2})\]\s([a-zA-Z\.]*):\s(.*)\s(\{.*\})\s(\[.*\])$`)
+
 //var regex, _ = regexp.Compile(`^\[([\d]{4}-[\d]{2}-[\d]{2}\s[\d]{2}:[\d]{2}:[\d]{2})\]\s([a-zA-Z\.]*):\s(.*)\s(\{?\[?.*\{?\]?)\s(\[.*\])$`)
 
 // ParseString parses content and returns a Log struct

@@ -1,0 +1,10 @@
+{
+  "remote_servers": [
+    {
+      "id": 123,
+      "host": "host",
+      "username": "username",
+      "ssh_key_path": "/home/will/.ssh/id_rsa"
+    }
+  ]
+}

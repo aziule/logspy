@@ -45,11 +45,11 @@ func (f *logFileInfo) GetPath() string {
 
 // GetLogs returns the current listened file's logs since a specific id
 func GetLogs(sinceId int) ([]*log.Log, error) {
-	if listenedLogFile == nil {
-		return nil, ErrNotListening
-	}
+	logs := make([]*log.Log, 0)
 
-	var logs []*log.Log
+	if listenedLogFile == nil {
+		return logs, ErrNotListening
+	}
 
 	for _, log := range listenedLogFile.GetLogs() {
 		if log.Id > sinceId {

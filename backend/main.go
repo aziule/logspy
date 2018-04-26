@@ -20,6 +20,7 @@ func main() {
 	http.HandleFunc("/api/open/local", api.HandleOpenLocalFile)
 	http.HandleFunc("/api/open/remote", api.HandleOpenRemoteFile)
 	http.HandleFunc("/api/logs", api.HandleGetLogs)
+	http.HandleFunc("/api/remote-servers", api.HandleGetSavedRemoteServers)
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

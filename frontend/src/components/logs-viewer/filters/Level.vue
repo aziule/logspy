@@ -30,12 +30,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-select {
-    display: block;
-    color: black;
-    width: auto;
-    font-weight: normal;
-}
-</style>

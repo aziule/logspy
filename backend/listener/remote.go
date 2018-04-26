@@ -5,10 +5,10 @@ import (
 	"errors"
 	"io"
 
+	"fmt"
 	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/aziule/simple-logs-gui/backend/ssh"
 	cssh "golang.org/x/crypto/ssh"
-	"fmt"
 )
 
 var (
@@ -33,9 +33,9 @@ type Message struct {
 // but without starting to listen to it
 func createRemotelyListenedFile(path string, config StrategyConfig) ListenedLogFile {
 	client := &ssh.Client{
-		Host:           config["host"].(string),//"www119.avantiplc.net:22",
-		User:           config["username"].(string),//"wclaude",
-		PrivateKeyPath: config["ssh_key_path"].(string),//"/home/will/.ssh/id_rsa",
+		Host:           config["host"].(string),         //"www119.avantiplc.net:22",
+		User:           config["username"].(string),     //"wclaude",
+		PrivateKeyPath: config["ssh_key_path"].(string), //"/home/will/.ssh/id_rsa",
 	}
 
 	return &remotelyListenedLogFile{
