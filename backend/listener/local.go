@@ -7,7 +7,6 @@ import (
 	"github.com/hpcloud/tail"
 )
 
-// TODO: add some inheritance for Path and Logs
 type locallyListenedLogFile struct {
 	*logFileInfo
 	TailChan *tail.Tail

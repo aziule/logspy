@@ -21,7 +21,7 @@
             </tbody>
         </table>
         <div class="no-logs" v-if="logs.length === 0">
-            There are no logs at the moment
+            No new logs at the moment
         </div>
     </div>
 </template>

@@ -6,7 +6,12 @@ const httpClient = {
             xhr.open('GET', url)
 
             xhr.onload = () => {
-                var apiData = JSON.parse(xhr.responseText)
+                try {
+                    var apiData = JSON.parse(xhr.responseText)
+                } catch (error) {
+                    reject(new Error('Something is going wrong with the API!'))
+                    return
+                }
 
                 if (xhr.status === 200) {
                     resolve(apiData)

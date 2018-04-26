@@ -3,7 +3,7 @@
         <td>{{ log.id }}</td>
         <td>{{ log.time|date }}</td>
         <td>{{ log.level }}</td>
-        <td v-html="logMessage"></td>
+        <td class="log-message" v-html="logMessage"></td>
         <td><pre>{{ log.contextual_info|pretty }}</pre></td>
     </tr>
 </template>
@@ -50,8 +50,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .matching-text {
     background-color: yellow;
+}
+table td.log-message {
+    word-break: break-word;
+}
+pre {
+    white-space: pre-wrap;
 }
 </style>

@@ -27,6 +27,7 @@ type ListenedLogFile interface {
 	Listen() error
 	StopListening()
 	GetLogs() []*log.Log
+	GetPath() string
 }
 
 type logFileInfo struct {
