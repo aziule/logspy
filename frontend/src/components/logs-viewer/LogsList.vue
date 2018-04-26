@@ -45,8 +45,10 @@ export default {
                     return false
                 }
 
+                var content = log.message ? log.message : log.raw
+
                 if (this.filters.message) {
-                    return log.message.toLowerCase().includes(this.filters.message.toLowerCase())
+                    return content.toLowerCase().includes(this.filters.message.toLowerCase())
                 }
 
                 return true

@@ -19,7 +19,9 @@ export default {
             'filters'
         ]),
         logMessage () {
-            if (!this.filters.message) return this.log.message
+            var content = this.log.message ? this.log.message : this.log.raw
+
+            if (!this.filters.message) return content
 
             /* eslint-disable no-useless-escape */
             var regex = new RegExp(
@@ -28,7 +30,7 @@ export default {
             )
             /* eslint-enable no-useless-escape */
 
-            return this.log.message.replace(regex, (match) => {
+            return content.replace(regex, (match) => {
                 return '<span class="matching-text">' + match + '</span>'
             })
         }
@@ -38,7 +40,11 @@ export default {
             return new Date(date).toLocaleString()
         },
         pretty: (data) => {
-            return JSON.stringify(JSON.parse(data), null, 4)
+            try {
+                return JSON.stringify(JSON.parse(data), null, 4)
+            } catch (error) {
+                return data
+            }
         }
     }
 }
