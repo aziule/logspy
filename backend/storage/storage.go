@@ -1,10 +1,10 @@
 package storage
 
 import (
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"os"
-	"encoding/json"
 )
 
 var (

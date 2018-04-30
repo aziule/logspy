@@ -2,6 +2,7 @@ package listener
 
 import (
 	"os"
+	"fmt"
 
 	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/hpcloud/tail"
@@ -9,14 +10,17 @@ import (
 
 type locallyListenedLogFile struct {
 	*logFileInfo
-	TailChan *tail.Tail
+	TailChan *tail.Tail `json:"-"`
 }
 
 // createLocallyListenedFile creates an instance of locallyListenedLogFile and initialises it
 // but without starting to listen to it
 func createLocallyListenedFile(path string) ListenedLogFile {
+	hash := generateHash(fmt.Sprintf("local-%s", path))
+
 	return &locallyListenedLogFile{
 		logFileInfo: &logFileInfo{
+			Hash: hash,
 			Path: path,
 		},
 	}
@@ -30,7 +34,7 @@ func (f *locallyListenedLogFile) Listen() error {
 	})
 
 	if err != nil {
-		return ErrCannotListen
+		return ErrCannotOpen
 	}
 
 	f.TailChan = tailChan

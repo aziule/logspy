@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"errors"
 	"io"
-
 	"fmt"
+
 	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/aziule/simple-logs-gui/backend/ssh"
 	cssh "golang.org/x/crypto/ssh"
@@ -20,7 +20,7 @@ var (
 
 type remotelyListenedLogFile struct {
 	*logFileInfo
-	Client *ssh.Client
+	Client *ssh.Client `json:"-"`
 }
 
 // Message is the struct used to transfer data from the remote server
@@ -32,14 +32,21 @@ type Message struct {
 // createLocallyListenedFile creates an instance of remotelyListenedLogFile and initialises it
 // but without starting to listen to it
 func createRemotelyListenedFile(path string, config StrategyConfig) ListenedLogFile {
+	host := config["host"].(string)
+	username := config["username"].(string)
+	privateKeyPath := config["ssh_key_path"].(string)
+
+	hash := generateHash(fmt.Sprintf("remote-%s-%s", host, path))
+
 	client := &ssh.Client{
-		Host:           config["host"].(string),         //"www119.avantiplc.net:22",
-		User:           config["username"].(string),     //"wclaude",
-		PrivateKeyPath: config["ssh_key_path"].(string), //"/home/will/.ssh/id_rsa",
+		Host:           host,         //"www119.avantiplc.net:22",
+		User:           username,     //"wclaude",
+		PrivateKeyPath: privateKeyPath, //"/home/will/.ssh/id_rsa",
 	}
 
 	return &remotelyListenedLogFile{
 		logFileInfo: &logFileInfo{
+			Hash: hash,
 			Path: path,
 		},
 		Client: client,

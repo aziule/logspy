@@ -2,6 +2,8 @@ package listener
 
 import (
 	"errors"
+	"crypto/sha1"
+	"encoding/hex"
 
 	"github.com/aziule/simple-logs-gui/backend/log"
 )
@@ -12,11 +14,12 @@ const (
 )
 
 var (
-	listenedLogFile ListenedLogFile
+	listenedLogFiles []ListenedLogFile
 
 	ErrInvalidStrategy = errors.New("Invalid strategy")
-	ErrCannotListen    = errors.New("Cannot listen to this file")
-	ErrNotListening    = errors.New("No file is currently being listened to")
+	ErrCannotOpen      = errors.New("Cannot open this file")
+	ErrNotOpened       = errors.New("The file is not opened")
+	ErrAlreadyOpened   = errors.New("The file is already opened")
 )
 
 type Strategy int
@@ -24,6 +27,7 @@ type StrategyConfig map[string]interface{}
 
 // ListenedLogFile is the interface we use to store / fetch logs from a file
 type ListenedLogFile interface {
+	GetHash() string
 	Listen() error
 	StopListening()
 	GetLogs() []*log.Log
@@ -31,8 +35,9 @@ type ListenedLogFile interface {
 }
 
 type logFileInfo struct {
-	Logs []*log.Log
-	Path string
+	Hash string `json:"hash"`
+	Path string `json:"path"`
+	Logs []*log.Log `json:"-"`
 }
 
 func (f *logFileInfo) GetLogs() []*log.Log {
@@ -43,15 +48,21 @@ func (f *logFileInfo) GetPath() string {
 	return f.Path
 }
 
+func (f *logFileInfo) GetHash() string {
+	return f.Hash
+}
+
 // GetLogs returns the current listened file's logs since a specific id
-func GetLogs(sinceId int) ([]*log.Log, error) {
+func GetLogs(hash string, sinceId int) ([]*log.Log, error) {
 	logs := make([]*log.Log, 0)
 
-	if listenedLogFile == nil {
-		return logs, ErrNotListening
+	file, err := getOpenedFileWithHash(hash)
+
+	if err != nil {
+		return logs, err
 	}
 
-	for _, log := range listenedLogFile.GetLogs() {
+	for _, log := range file.GetLogs() {
 		if log.Id > sinceId {
 			logs = append(logs, log)
 		}
@@ -61,13 +72,8 @@ func GetLogs(sinceId int) ([]*log.Log, error) {
 }
 
 // ListenToFile starts listening to a file given its path and its listening strategy
-func ListenToFile(path string, strategy Strategy, config StrategyConfig) error {
+func ListenToFile(path string, strategy Strategy, config StrategyConfig) (ListenedLogFile, error) {
 	var file ListenedLogFile
-
-	if listenedLogFile != nil {
-		listenedLogFile.StopListening()
-		listenedLogFile = nil
-	}
 
 	switch strategy {
 	case LocalListeningStrategy:
@@ -77,20 +83,51 @@ func ListenToFile(path string, strategy Strategy, config StrategyConfig) error {
 		file = createRemotelyListenedFile(path, config)
 		break
 	default:
-		return ErrInvalidStrategy
+		return nil, ErrInvalidStrategy
 	}
 
-	listenedLogFile = file
+	if isFileOpened(file.GetHash()) {
+		return nil, ErrAlreadyOpened
+	}
+
+	listenedLogFiles = append(listenedLogFiles, file)
 
 	var err error
 
 	go func() {
-		err = listenedLogFile.Listen()
+		err = file.Listen()
 	}()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return file, nil
+}
+
+func isFileOpened(hash string) bool {
+	_, err := getOpenedFileWithHash(hash)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func getOpenedFileWithHash(hash string) (ListenedLogFile, error) {
+	for _, f := range listenedLogFiles {
+		if f.GetHash() == hash {
+			return f, nil
+		}
+	}
+
+	return nil, ErrNotOpened
+}
+
+func generateHash(content string) string {
+	hasher := sha1.New()
+	_, _ = hasher.Write([]byte(content))
+
+	return hex.EncodeToString(hasher.Sum(nil))
 }
