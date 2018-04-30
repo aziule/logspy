@@ -1,25 +1,20 @@
 <template>
     <section>
-        <FileSelector />
+        <FileSelector v-bind:tab="activeTab" />
     </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import FileSelector from '@/components/file-selector/FileSelector'
+import FileSelector from '@/components/FileSelector'
 
 export default {
     name: 'TabContent',
     computed: {
         ...mapGetters([
             'tabs',
-            'activeTabId'
-        ]),
-        activeTab () {
-            for (var i = 0; i < this.tabs.length; i++) {
-                if (this.tabs[i].id === this.activeTabId) return this.tabs[i]
-            }
-        }
+            'activeTab'
+        ])
     },
     components: {
         FileSelector

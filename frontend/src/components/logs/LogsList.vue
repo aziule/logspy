@@ -28,9 +28,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import LogItem from '@/components/logs-viewer/LogItem'
-import Level from '@/components/logs-viewer/filters/Level'
-import Message from '@/components/logs-viewer/filters/Message'
+import LogItem from '@/components/logs/LogItem'
+import Level from '@/components/logs/filters/Level'
+import Message from '@/components/logs/filters/Message'
 
 export default {
     name: 'LogsList',

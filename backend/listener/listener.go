@@ -1,9 +1,9 @@
 package listener
 
 import (
-	"errors"
 	"crypto/sha1"
 	"encoding/hex"
+	"errors"
 
 	"github.com/aziule/simple-logs-gui/backend/log"
 )
@@ -35,8 +35,8 @@ type ListenedLogFile interface {
 }
 
 type logFileInfo struct {
-	Hash string `json:"hash"`
-	Path string `json:"path"`
+	Hash string     `json:"hash"`
+	Path string     `json:"path"`
 	Logs []*log.Log `json:"-"`
 }
 
@@ -50,25 +50,6 @@ func (f *logFileInfo) GetPath() string {
 
 func (f *logFileInfo) GetHash() string {
 	return f.Hash
-}
-
-// GetLogs returns the current listened file's logs since a specific id
-func GetLogs(hash string, sinceId int) ([]*log.Log, error) {
-	logs := make([]*log.Log, 0)
-
-	file, err := getOpenedFileWithHash(hash)
-
-	if err != nil {
-		return logs, err
-	}
-
-	for _, log := range file.GetLogs() {
-		if log.Id > sinceId {
-			logs = append(logs, log)
-		}
-	}
-
-	return logs, nil
 }
 
 // ListenToFile starts listening to a file given its path and its listening strategy
@@ -103,6 +84,25 @@ func ListenToFile(path string, strategy Strategy, config StrategyConfig) (Listen
 	}
 
 	return file, nil
+}
+
+// GetLogs returns the current listened file's logs since a specific id
+func GetLogs(hash string, sinceId int) ([]*log.Log, error) {
+	logs := make([]*log.Log, 0)
+
+	file, err := getOpenedFileWithHash(hash)
+
+	if err != nil {
+		return logs, err
+	}
+
+	for _, log := range file.GetLogs() {
+		if log.Id > sinceId {
+			logs = append(logs, log)
+		}
+	}
+
+	return logs, nil
 }
 
 func isFileOpened(hash string) bool {

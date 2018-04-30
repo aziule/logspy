@@ -2,17 +2,18 @@ import * as actionsList from '@/store/actions-list'
 
 const types = {
     ADD_TAB: 'ADD_TAB',
-    SELECT_TAB: 'SELECT_TAB'
+    SELECT_TAB: 'SELECT_TAB',
+    CLOSE_TAB: 'CLOSE_TAB'
 }
 
 const state = {
     tabs: [],
-    activeTabId: 0
+    activeTab: null
 }
 
 const getters = {
     tabs: state => state.tabs,
-    activeTabId: state => state.activeTabId
+    activeTab: (state) => state.activeTab
 }
 
 const mutations = {
@@ -20,7 +21,26 @@ const mutations = {
         state.tabs.push(tab)
     },
     [types.SELECT_TAB] (state, tab) {
-        state.activeTabId = tab.id
+        state.activeTab = tab
+    },
+    [types.CLOSE_TAB] (state, tab) {
+        // Closing a tab will delete it and select the newest tab
+        var nbTabs = state.tabs.length
+
+        for (var i = 0; i < nbTabs; i++) {
+            if (state.tabs[i].id === tab.id) {
+                state.tabs.splice(i, 1)
+                break
+            }
+        }
+
+        if (state.activeTab.id === tab.id) {
+            if (state.tabs.length > 0) {
+                state.activeTab = state.tabs[state.tabs.length - 1]
+            } else {
+                state.activeTab = null
+            }
+        }
     }
 }
 
@@ -29,7 +49,12 @@ const actions = {
         var tab = {
             id: Math.floor((Math.random() * 133742101) + 1),
             name: 'New tab',
-            type: 'local'
+            fileSelector: {
+                path: '',
+                remote: '',
+                type: 'local'
+            },
+            hash: ''
         }
 
         commit(types.ADD_TAB, tab)
@@ -37,6 +62,9 @@ const actions = {
     },
     [actionsList.SELECT_TAB] ({ commit }, tab) {
         commit(types.SELECT_TAB, tab)
+    },
+    [actionsList.CLOSE_TAB] ({ commit }, tab) {
+        commit(types.CLOSE_TAB, tab)
     }
 }
 

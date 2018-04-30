@@ -2,17 +2,20 @@
     <section>
         <Nav />
         <TabContent />
+        <LogsList />
     </section>
 </template>
 
 <script>
 import Nav from '@/components/Nav'
 import TabContent from '@/components/TabContent'
+import LogsList from '@/components/logs/LogsList'
 
 export default {
     components: {
         Nav,
-        TabContent
+        TabContent,
+        LogsList
     },
     name: 'App'
 }

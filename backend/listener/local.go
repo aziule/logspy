@@ -1,8 +1,8 @@
 package listener
 
 import (
-	"os"
 	"fmt"
+	"os"
 
 	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/hpcloud/tail"

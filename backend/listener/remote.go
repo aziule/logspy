@@ -3,8 +3,8 @@ package listener
 import (
 	"bufio"
 	"errors"
-	"io"
 	"fmt"
+	"io"
 
 	"github.com/aziule/simple-logs-gui/backend/log"
 	"github.com/aziule/simple-logs-gui/backend/ssh"
@@ -39,8 +39,8 @@ func createRemotelyListenedFile(path string, config StrategyConfig) ListenedLogF
 	hash := generateHash(fmt.Sprintf("remote-%s-%s", host, path))
 
 	client := &ssh.Client{
-		Host:           host,         //"www119.avantiplc.net:22",
-		User:           username,     //"wclaude",
+		Host:           host,           //"www119.avantiplc.net:22",
+		User:           username,       //"wclaude",
 		PrivateKeyPath: privateKeyPath, //"/home/will/.ssh/id_rsa",
 	}
 
@@ -56,7 +56,6 @@ func createRemotelyListenedFile(path string, config StrategyConfig) ListenedLogF
 // Listen starts listening for incoming logs and stores them
 func (f *remotelyListenedLogFile) Listen() error {
 	if err := f.Client.Connect(); err != nil {
-		fmt.Sprintf(err.Error())
 		return err
 	}
 

@@ -1,5 +1,6 @@
 export const OPEN_LOCAL_LOG_FILE = 'OPEN_LOCAL_LOG_FILE'
 export const OPEN_REMOTE_LOG_FILE = 'OPEN_REMOTE_LOG_FILE'
+
 export const READ_LOG_FILE = 'READ_LOG_FILE'
 export const NEW_LOGS = 'NEW_LOGS'
 export const FILTER_BY_LEVEL = 'FILTER_BY_LEVEL'
@@ -8,3 +9,4 @@ export const GET_REMOTE_SERVERS = 'GET_REMOTE_SERVERS'
 
 export const CREATE_NEW_TAB = 'CREATE_NEW_TAB'
 export const SELECT_TAB = 'SELECT_TAB'
+export const CLOSE_TAB = 'CLOSE_TAB'
