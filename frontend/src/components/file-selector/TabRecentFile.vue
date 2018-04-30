@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <section>
         <p>Recently opened files</p>
-    </div>
+    </section>
 </template>
 
 <script>

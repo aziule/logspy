@@ -1,19 +1,20 @@
 <template>
-    <div>
+    <section>
         <p>Open a file located on a remote server using SSH</p>
         <form v-on:submit="openRemoteFile">
             <div class="input-field">
                 <select v-model="remoteServer">
                     <option value="">Select a remote</option>
                     <option v-for="remoteServer in remoteServers" v-bind:remoteServer="remoteServer" v-bind:key="remoteServer.id" v-bind:value="remoteServer">
-                        {{ remoteServer.host }}
+                        {{ remoteServer.name }} ({{ remoteServer.host }})
                     </option>
                 </select>
+                <button class="btn grey btn-small lighten-3 grey-text text-darken-2 add-remote" type="button">Manage remotes</button>
                 <input placeholder="/path/to/file.log" id="file_path" type="text" class="validate" v-model="remoteFilePath" required />
                 <button class="btn right" type="submit">Open</button>
             </div>
         </form>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -47,9 +48,6 @@ export default {
                 this.$emit('onError', e)
             })
         }
-    },
-    mounted () {
-        this.$store.dispatch(actionsList.GET_REMOTE_SERVERS)
     }
 }
 </script>
@@ -58,5 +56,6 @@ export default {
 select {
     width: 100%!important;
     margin-bottom: 15px;
+    border-color: #9e9e9e;
 }
 </style>

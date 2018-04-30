@@ -1,28 +1,20 @@
 <template>
-    <div>
-        <LogsList v-if="openedFile" />
-        <FileSelector v-if="!openedFile" />
-    </div>
+    <section>
+        <Nav />
+        <TabContent />
+    </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import store from '@/store'
-import FileSelector from '@/components/file-selector/FileSelector'
-import LogsList from '@/components/logs-viewer/LogsList'
+import Nav from '@/components/Nav'
+import TabContent from '@/components/TabContent'
 
 export default {
     components: {
-        FileSelector,
-        LogsList
+        Nav,
+        TabContent
     },
-    name: 'App',
-    store,
-    computed: {
-        ...mapGetters([
-            'openedFile'
-        ])
-    }
+    name: 'App'
 }
 </script>
 

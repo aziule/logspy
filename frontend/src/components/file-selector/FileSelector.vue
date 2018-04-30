@@ -1,107 +1,49 @@
 <template>
-    <div v-bind:class="{'file-selector-wrapper': isVisible, 'file-selector-wrapper--hidden': !isVisible}">
-        <div class="file-selector">
-            <h1>Choose a file</h1>
-            <ul class="tabs">
-                <li class="tab" v-bind:class="{ active: activeTab === 'recent' }" @click="selectTab('recent')">Recently opened</li>
-                <li class="tab" v-bind:class="{ active: activeTab === 'local' }" @click="selectTab('local')">Local file</li>
-                <li class="tab" v-bind:class="{ active: activeTab === 'remote' }" @click="selectTab('remote')">Remote file</li>
-            </ul>
-            <div class="error" v-if="error">{{ error }}</div>
-            <tab-recent-file v-if="activeTab == 'recent'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
-            <tab-local-file v-if="activeTab == 'local'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
-            <tab-remote-file v-if="activeTab == 'remote'" v-on:onError="onError" v-on:onLogFileOpened="onLogFileOpened"/>
-        </div>
-    </div>
+    <section class="file-selector">
+        <form>
+            <div class="input=field">
+                <select v-model="type">
+                    <option value="">File location</option>
+                    <option value="local">Local file</option>
+                    <option value="remote">Remote file</option>
+                </select>
+            </div>
+            <div class="input=field" v-if="type === 'remote'">
+                <select v-model="remoteServer">
+                    <option value="">Select a remote</option>
+                    <option v-for="remoteServer in remoteServers" v-bind:remoteServer="remoteServer" v-bind:key="remoteServer.id" v-bind:value="remoteServer">
+                        {{ remoteServer.name }} ({{ remoteServer.host }})
+                    </option>
+                </select>
+            </div>
+            <div class="input=field">
+                <input type="text" placeholder="Path" />
+            </div>
+        </form>
+    </section>
 </template>
 
 <script>
-import TabLocalFile from '@/components/file-selector/TabLocalFile'
-import TabRecentFile from '@/components/file-selector/TabRecentFile'
-import TabRemoteFile from '@/components/file-selector/TabRemoteFile'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'FileSelector',
     data: () => {
         return {
-            activeTab: 'recent',
-            isVisible: true,
-            error: null
+            type: '',
+            remoteServer: ''
         }
     },
-    methods: {
-        selectTab (name) {
-            this.activeTab = name
-        },
-        onLogFileOpened () {
-            this.error = null
-            this.isVisible = false
-        },
-        onError (e) {
-            this.error = e.message
-        }
-    },
-    components: {
-        TabLocalFile,
-        TabRecentFile,
-        TabRemoteFile
+    computed: {
+        ...mapGetters([
+            'remoteServers'
+        ])
     }
 }
 </script>
 
 <style scoped>
-h1 {
-    font-size: 2rem;
-    text-align: center;
-}
-.tabs {
-    text-align: center;
-}
-.tabs > .tab {
-    transition: .2s;
-    cursor: pointer;
-    color: #ee6e73;
-    opacity: .7;
-    padding: 15px;
-    height: auto;
-    line-height: 1rem;
-    margin-left: 15px;
-    margin-right: 15px;
-}
-.tabs > .tab:hover,
-.tabs > .tab.active {
-    opacity: 1;
-}
-.tabs > .tab.active {
-    border-bottom: 2px solid #ee6e73;
-}
-.file-selector-wrapper {
-    transition: opacity .2s, visibility .2s;
-    visibility: visible;
-    opacity: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, .2);
-    z-index: -1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.file-selector-wrapper--hidden {
-    transition: opacity .2s, visibility .2s;
-    opacity: 0;
-    visibility: hidden;
-}
 .file-selector {
-    background-color: white;
     padding: 15px;
-    border-radius: 3px;
-    min-height: 321px;
-    display: flex;
-    flex-direction: column;
-    justify-content: top;
 }
 </style>

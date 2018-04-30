@@ -5,3 +5,6 @@ export const NEW_LOGS = 'NEW_LOGS'
 export const FILTER_BY_LEVEL = 'FILTER_BY_LEVEL'
 export const FILTER_BY_MESSAGE = 'FILTER_BY_MESSAGE'
 export const GET_REMOTE_SERVERS = 'GET_REMOTE_SERVERS'
+
+export const CREATE_NEW_TAB = 'CREATE_NEW_TAB'
+export const SELECT_TAB = 'SELECT_TAB'

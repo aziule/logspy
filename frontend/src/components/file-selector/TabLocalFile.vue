@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <section>
         <p>Open a file located on your machine</p>
         <form v-on:submit="openLocalFile">
             <div class="input-field">
@@ -7,7 +7,7 @@
                 <button class="btn right" type="submit">Open</button>
             </div>
         </form>
-    </div>
+    </section>
 </template>
 
 <script>

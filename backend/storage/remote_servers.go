@@ -2,6 +2,7 @@ package storage
 
 type RemoteServer struct {
 	Id         int    `json:"id"`
+	Name       string `json:"name"`
 	Host       string `json:"host"`
 	Username   string `json:"username"`
 	SshKeyPath string `json:"ssh_key_path"`

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <section>
         <table class="striped highlight grey lighten-5">
             <thead class="red accent-1">
                 <tr>
@@ -23,7 +23,7 @@
         <div class="no-logs" v-if="logs.length === 0">
             No new logs at the moment
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
