@@ -1,22 +1,33 @@
 <template>
-    <section>
-        <Nav />
-        <TabContent v-if="activeTab" />
-        <div class="no-tabs" v-if="!activeTab">
-            <div class="no-tabs__description">Open a new tab by clicking the <span class="icon-plus">+</span> icon</div>
+    <section v-bind:class="{ 'show-side-panel': showSidePanel }">
+        <div class="side-panel z-depth-3">
+            <RecentNav v-if="showSidePanel" />
+        </div>
+        <div class="main-content">
+            <TabNav />
+            <TabContent v-if="activeTab" />
+            <div class="no-tabs" v-if="!activeTab">
+                <div class="no-tabs__description">Open a new tab by clicking the <span class="icon-plus">+</span> icon</div>
+            </div>
+            <div class="controls">
+                <span class="controls__control" @click="openSidePanel()" v-if="!showSidePanel">&rarr;</span>
+                <span class="controls__control" @click="closeSidePanel()" v-if="showSidePanel">&larr;</span>
+            </div>
         </div>
     </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import Nav from '@/components/Nav'
+import TabNav from '@/components/TabNav'
+import RecentNav from '@/components/RecentNav'
 import TabContent from '@/components/TabContent'
 import LogsList from '@/components/logs/LogsList'
 
 export default {
     components: {
-        Nav,
+        TabNav,
+        RecentNav,
         TabContent,
         LogsList
     },
@@ -25,11 +36,74 @@ export default {
         ...mapGetters([
             'activeTab'
         ])
+    },
+    methods: {
+        openSidePanel () {
+            this.showSidePanel = true
+        },
+        closeSidePanel () {
+            this.showSidePanel = false
+        }
+    },
+    data: () => {
+        return {
+            showSidePanel: true
+        }
     }
 }
 </script>
 
 <style>
+section {
+    height: 100vh;
+}
+.side-panel {
+    transition: left .3s;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -310px;
+    width: 100%;
+    max-width: 200px;
+    border-right: 1px solid #ddd;
+    z-index: 1;
+    padding-bottom: 30px;
+}
+.controls {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 30px;
+    width: 100%;
+    line-height: 30px;
+    border-top: 1px solid #ccc;
+}
+.controls .controls__control {
+    color: #333;
+    cursor: pointer;
+    transition: color .3s;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+.controls .controls__control:hover {
+    color: black;
+}
+.main-content {
+    position: absolute;
+    transition: left .3s;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+section.show-side-panel .side-panel {
+    left: 0;
+}
+section.show-side-panel .main-content {
+    left: 200px;
+}
 select:focus {
     outline: none;
 }

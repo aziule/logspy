@@ -21,7 +21,7 @@
                     <input type="text" placeholder="Path" v-model="activeTab.fileSelector.path" required />
                 </div>
                 <div class="input-field col s12 m3">
-                    <button type="submit" class="btn blue">Open</button>
+                    <button type="submit" class="btn blue z-depth-0">Open</button>
                 </div>
             </form>
             <div v-if="isFileOpened">
