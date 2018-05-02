@@ -54,9 +54,6 @@ export default {
 </script>
 
 <style>
-section {
-
-}
 .side-panel {
     overflow: auto;
     transition: left .3s;
