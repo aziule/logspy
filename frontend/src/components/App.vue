@@ -58,6 +58,7 @@ section {
     height: 100vh;
 }
 .side-panel {
+    overflow: auto;
     transition: left .3s;
     position: absolute;
     top: 0;
@@ -92,6 +93,7 @@ section {
 }
 .main-content {
     position: absolute;
+    overflow: auto;
     transition: left .3s;
     top: 0;
     bottom: 0;
