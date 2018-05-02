@@ -2,7 +2,6 @@
     <section>
         <Nav />
         <TabContent />
-        <LogsList />
     </section>
 </template>
 
@@ -36,9 +35,15 @@ select {
     display: block!important;
     opacity: 1!important;
     color: black!important;
-    width: auto!important;
+    width: 100%!important;
     height: 3rem!important;
     font-weight: normal!important;
     pointer-events: auto!important;
+}
+select, input {
+    border-color: #ddd;
+}
+.row {
+    margin-bottom: 1rem;
 }
 </style>

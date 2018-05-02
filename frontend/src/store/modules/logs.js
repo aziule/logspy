@@ -1,5 +1,10 @@
 import * as actionsList from '@/store/actions-list'
 import httpClient from '@/services/http-client'
+import filtering from '@/store/modules/filtering'
+
+const modules = {
+    filtering
+}
 
 const types = {
     LOADING: 'LOADING',
@@ -47,14 +52,14 @@ const mutations = {
 }
 
 const actions = {
-    [actionsList.READ_LOG_FILE] ({ state, commit, dispatch }) {
+    [actionsList.READ_LOG_FILE] ({ state, commit, dispatch }, hash) {
         if (state.isLoading) return
         if (!state.isActive) commit(types.ACTIVATE)
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
-            httpClient.get('/api/logs?since=' + state.highestId)
+            httpClient.get('/api/logs?since=' + state.highestId + '&hash=' + hash)
                 .then((logs) => {
                     var nbLogs = logs.length
                     var highestId = state.highestId
@@ -78,7 +83,7 @@ const actions = {
                     reject(new Error(msg))
                 }).then(() => {
                     setTimeout(() => {
-                        dispatch(actionsList.READ_LOG_FILE)
+                        dispatch(actionsList.READ_LOG_FILE, hash)
                     }, 1000)
                 })
         })
@@ -89,5 +94,6 @@ export default {
     state,
     actions,
     mutations,
-    getters
+    getters,
+    modules
 }

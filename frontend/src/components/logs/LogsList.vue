@@ -1,7 +1,7 @@
 <template>
     <section>
         <table class="striped highlight grey lighten-5">
-            <thead class="red accent-1">
+            <thead>
                 <tr>
                     <th>#</th>
                     <th>Time</th>

@@ -25,7 +25,6 @@ const actions = {
             httpClient.get('/api/remote-servers')
                 .then((remoteServers) => {
                     commit(types.REFRESH_REMOTE_SERVERS, remoteServers)
-                    console.log(remoteServers)
                     resolve()
                 }).catch((msg) => {
                     reject(new Error(msg))

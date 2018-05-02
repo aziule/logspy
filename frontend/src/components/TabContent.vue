@@ -1,12 +1,14 @@
 <template>
     <section>
         <FileSelector v-bind:tab="activeTab" />
+        <Logs v-if="activeTab && activeTab.hash" />
     </section>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import FileSelector from '@/components/FileSelector'
+import Logs from '@/components/logs/LogsList'
 
 export default {
     name: 'TabContent',
@@ -17,7 +19,8 @@ export default {
         ])
     },
     components: {
-        FileSelector
+        FileSelector,
+        Logs
     }
 }
 </script>

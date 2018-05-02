@@ -68,7 +68,7 @@ func ListenToFile(path string, strategy Strategy, config StrategyConfig) (Listen
 	}
 
 	if isFileOpened(file.GetHash()) {
-		return nil, ErrAlreadyOpened
+		return file, ErrAlreadyOpened
 	}
 
 	listenedLogFiles = append(listenedLogFiles, file)

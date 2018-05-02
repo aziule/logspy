@@ -23,7 +23,7 @@ func (api *Api) HandleOpenLocalFile(w http.ResponseWriter, req *http.Request) {
 
 	file, err := listener.ListenToFile(path, listener.LocalListeningStrategy, nil)
 
-	if err != nil {
+	if err != nil && err != listener.ErrAlreadyOpened {
 		api.writeError(w, err.Error(), 500)
 		return
 	}
@@ -68,7 +68,7 @@ func (api *Api) HandleOpenRemoteFile(w http.ResponseWriter, req *http.Request) {
 
 	file, err := listener.ListenToFile(logFilePath, listener.RemoteListeningStrategy, config)
 
-	if err != nil {
+	if err != nil && err != listener.ErrAlreadyOpened {
 		api.writeError(w, err.Error(), 500)
 		return
 	}

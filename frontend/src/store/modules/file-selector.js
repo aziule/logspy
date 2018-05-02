@@ -9,12 +9,12 @@ const types = {
 }
 
 const state = {
-    openedFile: null,
-    isLoading: false
+    isLoading: false,
+    openedFiles: []
 }
 
 const getters = {
-    openedFile: state => state.openedFile
+    openedFiles: state => state.openedFiles
 }
 
 const mutations = {
@@ -24,22 +24,27 @@ const mutations = {
     [types.DONE_LOADING] (state) {
         state.isLoading = false
     },
-    [types.OPEN_FILE] (state, path) {
-        state.openedFile = path
+    [types.OPEN_FILE] (state, hash) {
+        if (state.openedFiles.indexOf(hash) !== -1) {
+            return
+        }
+
+        state.openedFiles.push(hash)
     }
 }
 
 const actions = {
-    [actionsList.OPEN_LOCAL_LOG_FILE] ({ state, commit }, path) {
+    [actionsList.OPEN_LOCAL_LOG_FILE] ({ state, commit, dispatch }, path) {
         if (state.isLoading) return
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
             httpClient.get('/api/open/local?path=' + path)
-                .then(() => {
+                .then((data) => {
                     commit(types.DONE_LOADING)
-                    commit(types.OPEN_FILE, path)
+                    commit(types.OPEN_FILE, data.hash)
+                    dispatch(actionsList.ATTACH_FILE_TO_CURRENT_TAB, data.hash)
                     resolve()
                 }).catch((msg) => {
                     commit(types.DONE_LOADING)
@@ -47,16 +52,17 @@ const actions = {
                 })
         })
     },
-    [actionsList.OPEN_REMOTE_LOG_FILE] ({ state, commit }, payload) {
+    [actionsList.OPEN_REMOTE_LOG_FILE] ({ state, commit, dispatch }, payload) {
         if (state.isLoading) return
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
             httpClient.get(encodeURI('/api/open/remote?host=' + payload.remoteServer.host + '&username=' + payload.remoteServer.username + '&sshKeyPath=' + payload.remoteServer.ssh_key_path + '&path=' + payload.logFilePath))
-                .then(() => {
+                .then((data) => {
                     commit(types.DONE_LOADING)
-                    commit(types.OPEN_FILE, payload.logFilePath)
+                    commit(types.OPEN_FILE, data.hash)
+                    dispatch(actionsList.ATTACH_FILE_TO_CURRENT_TAB, data.hash)
                     resolve()
                 }).catch((msg) => {
                     commit(types.DONE_LOADING)

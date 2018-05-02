@@ -1,9 +1,17 @@
 import * as actionsList from '@/store/actions-list'
+import fileSelector from '@/store/modules/file-selector'
+import logs from '@/store/modules/logs'
+
+const modules = {
+    fileSelector,
+    logs
+}
 
 const types = {
     ADD_TAB: 'ADD_TAB',
     SELECT_TAB: 'SELECT_TAB',
-    CLOSE_TAB: 'CLOSE_TAB'
+    CLOSE_TAB: 'CLOSE_TAB',
+    ATTACH_FILE_TO_CURRENT_TAB: 'ATTACH_FILE_TO_CURRENT_TAB'
 }
 
 const state = {
@@ -41,6 +49,9 @@ const mutations = {
                 state.activeTab = null
             }
         }
+    },
+    [types.ATTACH_FILE_TO_CURRENT_TAB] (state, hash) {
+        state.activeTab.hash = hash
     }
 }
 
@@ -65,6 +76,9 @@ const actions = {
     },
     [actionsList.CLOSE_TAB] ({ commit }, tab) {
         commit(types.CLOSE_TAB, tab)
+    },
+    [actionsList.ATTACH_FILE_TO_CURRENT_TAB] ({ commit }, hash) {
+        commit(types.ATTACH_FILE_TO_CURRENT_TAB, hash)
     }
 }
 
@@ -72,5 +86,6 @@ export default {
     state,
     getters,
     actions,
-    mutations
+    mutations,
+    modules
 }
