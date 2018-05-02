@@ -77,7 +77,7 @@ nav .nav__tabs li {
 nav .nav__tabs .close-tab {
     visibility: hidden;
     padding: 0;
-    margin: 0 15px;
+    margin: 0 10px;
     color: #bdbdbd!important;
 }
 

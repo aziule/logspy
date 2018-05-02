@@ -102,6 +102,7 @@ section {
     left: 0;
     right: 0;
     padding-bottom: 30px;
+    background-color: #eee;
 }
 section.show-side-panel .side-panel {
     left: 0;

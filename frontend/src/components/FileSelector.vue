@@ -101,6 +101,10 @@ export default {
 <style scoped>
 section {
     background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+section.file-selector--opened {
+    border-color: #eee;
 }
 .error {
     margin: 15px 15px 0;
@@ -110,9 +114,6 @@ section {
 }
 form {
     margin: 0;
-}
-section {
-    border-bottom: 1px solid #eee;
 }
 input {
     margin-bottom: 0!important;
