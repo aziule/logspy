@@ -63,7 +63,7 @@ section {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -310px;
+    left: -205px;
     width: 100%;
     max-width: 200px;
     border-right: 1px solid #ddd;
