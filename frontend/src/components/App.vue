@@ -1,6 +1,6 @@
 <template>
     <section v-bind:class="{ 'show-side-panel': showSidePanel }">
-        <div class="side-panel z-depth-3">
+        <div class="side-panel z-depth-1">
             <RecentNav v-if="showSidePanel" />
         </div>
         <div class="main-content">
@@ -55,7 +55,7 @@ export default {
 
 <style>
 section {
-    height: 100vh;
+
 }
 .side-panel {
     overflow: auto;
@@ -71,13 +71,15 @@ section {
     padding-bottom: 30px;
 }
 .controls {
-    position: absolute;
+    position: fixed;
+    transition: left .3s;
     left: 0;
     bottom: 0;
     height: 30px;
     width: 100%;
     line-height: 30px;
     border-top: 1px solid #ccc;
+    background-color: white;
 }
 .controls .controls__control {
     color: #333;
@@ -96,14 +98,16 @@ section {
     overflow: auto;
     transition: left .3s;
     top: 0;
-    bottom: 0;
+    bottom: 0px;
     left: 0;
     right: 0;
+    padding-bottom: 30px;
 }
 section.show-side-panel .side-panel {
     left: 0;
 }
-section.show-side-panel .main-content {
+section.show-side-panel .main-content,
+section.show-side-panel .main-content .controls {
     left: 200px;
 }
 select:focus {
