@@ -83,7 +83,7 @@ export default {
                 break
             case 'remote':
                 this.$store.dispatch(actionsList.OPEN_REMOTE_LOG_FILE, {
-                    remoteServer: this.activeTab.fileSelector.remote.host,
+                    remoteServer: this.activeTab.fileSelector.remote,
                     logFilePath: this.activeTab.fileSelector.path
                 }).then(() => {
                     this.error = null
@@ -99,6 +99,9 @@ export default {
 </script>
 
 <style scoped>
+section {
+    background-color: white;
+}
 .error {
     margin: 15px 15px 0;
 }
