@@ -9,12 +9,7 @@ const types = {
 }
 
 const state = {
-    isLoading: false,
-    openedFiles: []
-}
-
-const getters = {
-    openedFiles: state => state.openedFiles
+    isLoading: false
 }
 
 const mutations = {
@@ -23,9 +18,6 @@ const mutations = {
     },
     [types.DONE_LOADING] (state) {
         state.isLoading = false
-    },
-    [types.OPEN_FILE] (state, file) {
-        state.openedFiles.push(file)
     }
 }
 
@@ -66,6 +58,5 @@ const actions = {
 export default {
     state,
     actions,
-    mutations,
-    getters
+    mutations
 }

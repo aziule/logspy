@@ -50,11 +50,10 @@ export default {
     computed: {
         ...mapGetters([
             'remoteServers',
-            'openedFiles',
             'activeTab'
         ]),
         isFileOpened () {
-            return this.openedFiles.indexOf(this.activeTab.file.hash) !== -1
+            return !!this.activeTab.file.hash
         }
     },
     filters: {
