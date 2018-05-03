@@ -35,7 +35,7 @@ const actions = {
             } else if (file.type === 'remote') {
                 url = encodeURI('/api/open/remote?host=' + file.remoteServer.host + '&username=' + file.remoteServer.username + '&sshKeyPath=' + file.remoteServer.ssh_key_path + '&path=' + file.path)
             } else {
-                reject(new Error('Invalid strategy'))
+                reject(new Error('Invalid file type'))
             }
 
             httpClient.get(url)
