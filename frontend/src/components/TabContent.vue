@@ -1,7 +1,7 @@
 <template>
     <section>
         <FileSelector v-bind:tab="activeTab" />
-        <Logs v-if="activeTab && activeTab.hash" />
+        <Logs v-if="activeTab && activeTab.file.hash" />
     </section>
 </template>
 

@@ -1,4 +1,6 @@
 import * as actionsList from '@/store/actions-list'
+import File from '@/models/File'
+import Tab from '@/models/Tab'
 import fileSelector from '@/store/modules/file-selector'
 import logs from '@/store/modules/logs'
 
@@ -50,23 +52,18 @@ const mutations = {
             }
         }
     },
-    [types.ATTACH_FILE_TO_CURRENT_TAB] (state, hash) {
-        state.activeTab.hash = hash
+    [types.ATTACH_FILE_TO_CURRENT_TAB] (state, file) {
+        state.activeTab.file = file
     }
 }
 
 const actions = {
     [actionsList.CREATE_NEW_TAB] ({ commit }) {
-        var tab = {
-            id: Math.floor((Math.random() * 133742101) + 1),
-            name: 'New tab',
-            fileSelector: {
-                path: '',
-                remote: '',
-                type: 'local'
-            },
-            hash: ''
-        }
+        var tab = new Tab(
+            Math.floor((Math.random() * 133742101) + 1),
+            'New tab',
+            new File('local', '', '')
+        )
 
         commit(types.ADD_TAB, tab)
         commit(types.SELECT_TAB, tab)

@@ -52,14 +52,14 @@ const mutations = {
 }
 
 const actions = {
-    [actionsList.READ_LOG_FILE] ({ state, commit, dispatch }, hash) {
+    [actionsList.READ_LOG_FILE] ({ state, commit, dispatch }, file) {
         if (state.isLoading) return
         if (!state.isActive) commit(types.ACTIVATE)
 
         commit(types.LOADING)
 
         return new Promise((resolve, reject) => {
-            httpClient.get('/api/logs?since=' + state.highestId + '&hash=' + hash)
+            httpClient.get('/api/logs?since=' + state.highestId + '&hash=' + file.hash)
                 .then((logs) => {
                     var nbLogs = logs.length
                     var highestId = state.highestId
@@ -83,7 +83,7 @@ const actions = {
                     reject(new Error(msg))
                 }).then(() => {
                     setTimeout(() => {
-                        dispatch(actionsList.READ_LOG_FILE, hash)
+                        dispatch(actionsList.READ_LOG_FILE, file)
                     }, 1000)
                 })
         })

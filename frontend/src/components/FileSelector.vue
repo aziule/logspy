@@ -4,13 +4,13 @@
             <form @submit="openFile" v-if="!isFileOpened">
                 <div class="error s12" v-if="error">{{ error }}</div>
                 <div class="input-field col s12 m3">
-                    <select v-model="activeTab.fileSelector.type">
+                    <select v-model="activeTab.file.type">
                         <option value="local">Local file</option>
                         <option value="remote">Remote file</option>
                     </select>
                 </div>
-                <div class="input-field col s12 m3" v-if="activeTab.fileSelector.type === 'remote'">
-                    <select v-model="activeTab.fileSelector.remote" required>
+                <div class="input-field col s12 m3" v-if="activeTab.file.type === 'remote'">
+                    <select v-model="activeTab.file.remoteServer" required>
                         <option value="">Select a remote</option>
                         <option v-for="remoteServer in remoteServers" v-bind:remoteServer="remoteServer" v-bind:key="remoteServer.id" v-bind:value="remoteServer">
                             {{ remoteServer.name }} ({{ remoteServer.host }})
@@ -18,18 +18,18 @@
                     </select>
                 </div>
                 <div class="input-field col s12 m3">
-                    <input type="text" placeholder="Path" v-model="activeTab.fileSelector.path" required />
+                    <input type="text" placeholder="Path" v-model="activeTab.file.path" required />
                 </div>
                 <div class="input-field col s12 m3">
                     <button type="submit" class="btn blue z-depth-0">Open</button>
                 </div>
             </form>
             <div v-if="isFileOpened">
-                <div class="input-field col s12 m3" v-if="activeTab.fileSelector.type === 'remote'">
-                    {{ activeTab.fileSelector.remote.name }}
+                <div class="input-field col s12 m3" v-if="activeTab.file.type === 'remote'">
+                    {{ activeTab.file.remote.name }}
                 </div>
                 <div class="input-field col s12 m3">
-                    {{ activeTab.fileSelector.path }}
+                    {{ activeTab.file.path }}
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@ export default {
             'activeTab'
         ]),
         isFileOpened () {
-            return this.openedFiles.indexOf(this.activeTab.hash) !== -1
+            return this.openedFiles.indexOf(this.activeTab.file.hash) !== -1
         }
     },
     filters: {
@@ -71,28 +71,13 @@ export default {
         openFile (e) {
             e.preventDefault()
 
-            switch (this.activeTab.fileSelector.type) {
-            case 'local':
-                this.$store.dispatch(actionsList.OPEN_LOCAL_LOG_FILE, this.activeTab.fileSelector.path)
-                    .then(() => {
-                        this.error = null
-                        this.$store.dispatch(actionsList.READ_LOG_FILE, this.activeTab.hash)
-                    }).catch((err) => {
-                        this.error = err.message
-                    })
-                break
-            case 'remote':
-                this.$store.dispatch(actionsList.OPEN_REMOTE_LOG_FILE, {
-                    remoteServer: this.activeTab.fileSelector.remote,
-                    logFilePath: this.activeTab.fileSelector.path
-                }).then(() => {
+            this.$store.dispatch(actionsList.OPEN_LOG_FILE, this.activeTab.file)
+                .then(() => {
                     this.error = null
-                    this.$store.dispatch(actionsList.READ_LOG_FILE, this.activeTab.hash)
+                    this.$store.dispatch(actionsList.READ_LOG_FILE, this.activeTab.file)
                 }).catch((err) => {
                     this.error = err.message
                 })
-                break
-            }
         }
     }
 }
