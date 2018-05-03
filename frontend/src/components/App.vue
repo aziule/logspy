@@ -19,6 +19,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as actionsList from '@/store/actions-list'
 import TabNav from '@/components/TabNav'
 import RecentNav from '@/components/RecentNav'
 import TabContent from '@/components/TabContent'
@@ -49,6 +50,10 @@ export default {
         return {
             showSidePanel: true
         }
+    },
+    mounted () {
+        this.$store.dispatch(actionsList.GET_REMOTE_SERVERS)
+        this.$store.dispatch(actionsList.GET_RECENT_FILES)
     }
 }
 </script>

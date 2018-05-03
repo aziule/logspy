@@ -21,7 +21,7 @@ const mutations = {
 }
 
 const actions = {
-    [actionsList.GET_REMOTE_SERVERS] ({ state, commit, dispatch }) {
+    [actionsList.GET_REMOTE_SERVERS] ({ commit }) {
         return new Promise((resolve, reject) => {
             httpClient.get('/api/remote-servers')
                 .then((remoteServers) => {

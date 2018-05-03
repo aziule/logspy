@@ -41,7 +41,6 @@ export default {
     },
     mounted () {
         this.$store.dispatch(actionsList.CREATE_NEW_TAB)
-        this.$store.dispatch(actionsList.GET_REMOTE_SERVERS)
     }
 }
 </script>

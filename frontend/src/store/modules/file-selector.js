@@ -4,8 +4,7 @@ import httpClient from '@/services/http-client'
 const types = {
     LOADING: 'LOADING',
     DONE_LOADING: 'DONE_LOADING',
-    ERROR: 'ERROR',
-    OPEN_FILE: 'OPEN_FILE'
+    ERROR: 'ERROR'
 }
 
 const state = {
@@ -44,7 +43,7 @@ const actions = {
 
                     file.hash = data.hash
 
-                    commit(types.OPEN_FILE, file)
+                    dispatch(actionsList.ADD_RECENT_FILE, file)
                     dispatch(actionsList.ATTACH_FILE_TO_CURRENT_TAB, file)
                     resolve()
                 }).catch((msg) => {

@@ -1,17 +1,18 @@
 const ls = {
     isAvailable: typeof (Storage) !== 'undefined',
-    getRecent () {
+    getRecentFiles () {
         return JSON.parse(localStorage.getItem('recentFiles'))
     },
-    addRecent (file) {
-        var items = this.getRecent()
+    addRecentFile (file) {
+        var files = this.getRecentFiles()
 
-        if (items === null) {
-            items = []
+        if (files === null) {
+            files = []
         }
 
-        items.push(file)
-        localStorage.setItem('recentFiles', JSON.stringify(items))
+        files.push(file)
+
+        localStorage.setItem('recentFiles', JSON.stringify(files))
     }
 }
 
