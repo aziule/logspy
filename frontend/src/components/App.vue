@@ -1,7 +1,7 @@
 <template>
     <section v-bind:class="{ 'show-side-panel': showSidePanel }">
         <div class="side-panel z-depth-1">
-            <RecentNav v-if="showSidePanel" />
+            <RecentNav />
         </div>
         <div class="main-content">
             <TabNav />
