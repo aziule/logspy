@@ -65,9 +65,9 @@ export default {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -205px;
+    left: -305px;
     width: 100%;
-    max-width: 200px;
+    max-width: 300px;
     border-right: 1px solid #ddd;
     z-index: 1;
     padding-bottom: 30px;
@@ -111,7 +111,7 @@ section.show-side-panel .side-panel {
 }
 section.show-side-panel .main-content,
 section.show-side-panel .main-content .controls {
-    left: 200px;
+    left: 300px;
 }
 select:focus {
     outline: none;
