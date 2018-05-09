@@ -2,10 +2,15 @@
     <nav class="white">
         <ul class="left nav__tabs">
             <li v-for="tab in tabs" v-bind:value="tab" v-bind:tab="tab" v-bind:key="tab.id" v-bind:class="{ active: tab.id === activeTab.id }">
-                <a href="#" @click="selectTab($event, tab)">{{ tab.name ? tab.name : 'New tab' }}</a>
-                <a href="#" class="close-tab" @click="closeTab($event, tab)">&times;</a>
+                <a v-if="!isEditing(tab)" href="#" @click.prevent="selectTab(tab)">{{ tab.name }}</a>
+                <form v-if="isEditing(tab)" @submit.prevent="updateTabName(tab)">
+                    <input type="text" class="nav__tabs__tab__name-input" v-model="tab.name" ref="tabName">
+                </form>
+                <a href="#" class="rename-tab nav__tabs__tab__icon" @click.prevent="editTabName(tab)" v-if="!isEditing(tab)">&#9998;</a>
+                <a href="#" class="rename-tab nav__tabs__tab__icon" @click.prevent="updateTabName(tab)" v-if="isEditing(tab)">&#128504;</a>
+                <a href="#" class="close-tab nav__tabs__tab__icon" @click.prevent="closeTab(tab)">&times;</a>
             </li>
-            <li><a class="add-tab" href="#" @click="addTab">+</a></li>
+            <li><a class="add-tab" href="#" @click.prevent="addTab">+</a></li>
         </ul>
         <ul class="right nav__buttons">
             <li><a href="#"><i class="icon-crank"></i></a></li>
@@ -19,6 +24,11 @@ import * as actionsList from '@/store/actions-list'
 
 export default {
     name: 'Nav',
+    data: () => {
+        return {
+            editedTabNames: []
+        }
+    },
     computed: {
         ...mapGetters([
             'tabs',
@@ -26,17 +36,27 @@ export default {
         ])
     },
     methods: {
-        addTab (e) {
-            e.preventDefault()
+        addTab () {
             this.$store.dispatch(actionsList.CREATE_NEW_TAB)
         },
-        selectTab (e, tab) {
-            e.preventDefault()
+        selectTab (tab) {
             this.$store.dispatch(actionsList.SELECT_TAB, tab)
         },
-        closeTab (e, tab) {
-            e.preventDefault()
+        closeTab (tab) {
             this.$store.dispatch(actionsList.CLOSE_TAB, tab)
+
+            var tabIndex = this.editedTabNames.indexOf(tab.id)
+            this.editedTabNames.splice(tabIndex, 1)
+        },
+        isEditing (tab) {
+            return this.editedTabNames.indexOf(tab.id) !== -1
+        },
+        editTabName (tab) {
+            if (!this.isEditing(tab)) this.editedTabNames.push(tab.id)
+        },
+        updateTabName (tab) {
+            var tabIndex = this.editedTabNames.indexOf(tab.id)
+            this.editedTabNames.splice(tabIndex, 1)
         }
     },
     mounted () {
@@ -73,18 +93,25 @@ nav .nav__tabs li {
     border-color: #ddd;
 }
 
-nav .nav__tabs .close-tab {
+.nav__tabs__tab__icon {
     visibility: hidden;
     padding: 0;
-    margin: 0 10px;
+    margin: 0 2px;
     color: #bdbdbd!important;
 }
 
-nav .nav__tabs .close-tab:hover {
+.nav__tabs__tab__icon.open-tab {
+}
+
+.nav__tabs__tab__icon.close-tab {
+    margin-right: 10px;
+}
+
+.nav__tabs__tab__icon:hover {
     color: black!important;
 }
 
-nav .nav__tabs li:hover .close-tab {
+nav .nav__tabs li:hover .nav__tabs__tab__icon {
     visibility: visible;
 }
 
@@ -171,5 +198,22 @@ nav .nav__buttons li a:hover {
     box-sizing: border-box;
     content: '';
     pointer-events: none;
+}
+
+.nav__tabs__tab__name-input {
+    height: auto!important;
+    border: 1px solid #bdbdbd!important;
+    margin: 0 3px 0 15px!important;
+    width: auto!important;
+    padding: 2px!important;
+    color: black;
+}
+
+.nav__tabs__tab__name-input:focus {
+    box-shadow: none!important;
+}
+
+nav form {
+    display: inline-block;
 }
 </style>
