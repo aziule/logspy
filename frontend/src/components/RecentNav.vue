@@ -32,7 +32,10 @@ export default {
     methods: {
         openRecentFile (e, file) {
             e.preventDefault()
-            this.$store.dispatch(actionsList.CREATE_NEW_TAB)
+            var tabName = file.type === 'remote' ? file.remoteServer.name + ' ' : ''
+            tabName += file.path
+
+            this.$store.dispatch(actionsList.CREATE_NEW_TAB, tabName)
             this.$store.dispatch(actionsList.OPEN_LOG_FILE, file)
                 .then(() => {
                     this.error = null
