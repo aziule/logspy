@@ -4,7 +4,7 @@ class File {
         this.path = path
         this.remoteServer = remoteServer
         this.hash = hash
-        this.createdAt = new Date().getTime()
+        this.updatedAt = new Date().getTime()
     }
 }
 

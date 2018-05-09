@@ -61,7 +61,7 @@ const actions = {
     [actionsList.CREATE_NEW_TAB] ({ commit }) {
         var tab = new Tab(
             Math.floor((Math.random() * 133742101) + 1),
-            'New tab',
+            '',
             new File('local', '', '')
         )
 

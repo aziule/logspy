@@ -2,7 +2,7 @@
     <nav class="white">
         <ul class="left nav__tabs">
             <li v-for="tab in tabs" v-bind:value="tab" v-bind:tab="tab" v-bind:key="tab.id" v-bind:class="{ active: tab.id === activeTab.id }">
-                <a href="#" @click="selectTab($event, tab)">{{ tab.name }}</a>
+                <a href="#" @click="selectTab($event, tab)">{{ tab.name ? tab.name : 'New tab' }}</a>
                 <a href="#" class="close-tab" @click="closeTab($event, tab)">&times;</a>
             </li>
             <li><a class="add-tab" href="#" @click="addTab">+</a></li>

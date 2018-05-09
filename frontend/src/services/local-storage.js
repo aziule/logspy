@@ -11,8 +11,19 @@ const ls = {
     },
     addRecentFile (file) {
         var files = this.getRecentFiles()
+        var exists = false
 
-        files.push(file)
+        for (var i = 0, nbFiles = files.length; i < nbFiles; i++) {
+            if (files[i].hash === file.hash) {
+                exists = true
+                files[i].updatedAt = new Date().getTime()
+            }
+        }
+
+        if (!exists) {
+            file.updatedAt = new Date().getTime()
+            files.push(file)
+        }
 
         localStorage.setItem('recentFiles', JSON.stringify(files))
     }

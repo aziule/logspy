@@ -26,7 +26,7 @@
             </form>
             <div v-if="isFileOpened">
                 <div class="input-field col s12 m3" v-if="activeTab.file.type === 'remote'">
-                    {{ activeTab.file.remote.name }}
+                    {{ activeTab.file.remoteServer.name }}
                 </div>
                 <div class="input-field col s12 m3">
                     {{ activeTab.file.path }}

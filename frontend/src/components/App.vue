@@ -84,7 +84,7 @@ export default {
     background-color: white;
 }
 .controls .controls__control {
-    color: #333;
+    color: #bdbdbd;
     cursor: pointer;
     transition: color .3s;
     display: inline-block;
