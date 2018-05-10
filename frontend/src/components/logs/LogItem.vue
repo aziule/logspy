@@ -19,7 +19,7 @@ export default {
             'filters'
         ]),
         logMessage () {
-            var content = this.log.message ? this.log.message : this.log.raw
+            var content = this.log.message || this.log.raw
 
             if (!this.filters.message) return content
 

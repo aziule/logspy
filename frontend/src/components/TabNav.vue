@@ -6,14 +6,14 @@
                 <form v-if="isEditing(tab)" @submit.prevent="updateTabName(tab)">
                     <input type="text" class="nav__tabs__tab__name-input" v-model="tab.name" ref="tabName">
                 </form>
-                <a href="#" class="rename-tab nav__tabs__tab__icon" @click.prevent="editTabName(tab)" v-if="!isEditing(tab)">&#9998;</a>
-                <a href="#" class="rename-tab nav__tabs__tab__icon" @click.prevent="updateTabName(tab)" v-if="isEditing(tab)">&#128504;</a>
-                <a href="#" class="close-tab nav__tabs__tab__icon" @click.prevent="closeTab(tab)">&times;</a>
+                <a href="#" class="rename-tab nav__tabs__tab__icon icon" @click.prevent="editTabName(tab)" v-if="!isEditing(tab)">&#9998;</a>
+                <a href="#" class="rename-tab nav__tabs__tab__icon icon" @click.prevent="updateTabName(tab)" v-if="isEditing(tab)">&#128504;</a>
+                <a href="#" class="close-tab nav__tabs__tab__icon icon" @click.prevent="closeTab(tab)">&times;</a>
             </li>
             <li><a class="add-tab" href="#" @click.prevent="addTab">+</a></li>
         </ul>
         <ul class="right nav__buttons">
-            <li><a href="#"><i class="icon-crank"></i></a></li>
+            <li><a href="#"><i class="icon icon-crank"></i></a></li>
         </ul>
     </nav>
 </template>
@@ -74,6 +74,15 @@ nav {
     border-bottom: 1px solid #ddd;
 }
 
+nav .icon {
+    transition: color .3s;
+    color: #bdbdbd!important;
+}
+
+nav .icon:hover {
+    color: black!important;
+}
+
 nav a,
 nav a span {
     display: inline-block;
@@ -97,18 +106,10 @@ nav .nav__tabs li {
     visibility: hidden;
     padding: 0;
     margin: 0 2px;
-    color: #bdbdbd!important;
-}
-
-.nav__tabs__tab__icon.open-tab {
 }
 
 .nav__tabs__tab__icon.close-tab {
     margin-right: 10px;
-}
-
-.nav__tabs__tab__icon:hover {
-    color: black!important;
 }
 
 nav .nav__tabs li:hover .nav__tabs__tab__icon {
@@ -162,7 +163,6 @@ nav .nav__buttons li a:hover {
 }
 
 .icon-crank {
-    transition: color .3s;
     display: inline-block;
     vertical-align: middle;
     position: relative;
@@ -207,10 +207,7 @@ nav .nav__buttons li a:hover {
     width: auto!important;
     padding: 2px!important;
     color: black;
-}
-
-.nav__tabs__tab__name-input:focus {
-    box-shadow: none!important;
+    background-color: white!important;
 }
 
 nav form {

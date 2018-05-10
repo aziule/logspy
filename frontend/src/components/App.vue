@@ -135,6 +135,10 @@ select {
 select, input {
     border-color: #ddd;
 }
+input:focus {
+    box-shadow: none!important;
+    border-color: black!important;
+}
 .row {
     margin-bottom: 1rem;
 }
