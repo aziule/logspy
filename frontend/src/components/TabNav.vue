@@ -1,14 +1,17 @@
 <template>
     <nav class="white">
         <ul class="left nav__tabs">
-            <li v-for="tab in tabs" v-bind:value="tab" v-bind:tab="tab" v-bind:key="tab.id" v-bind:class="{ active: tab.id === activeTab.id }">
+            <li v-for="tab in tabs" v-bind:value="tab" v-bind:tab="tab" v-bind:key="tab.id" v-bind:class="{
+                active: tab.id === activeTab.id,
+                'nav__tabs__tab--editing': isEditing(tab)
+             }">
                 <a v-if="!isEditing(tab)" href="#" @click.prevent="selectTab(tab)">{{ tab.name }}</a>
                 <form v-if="isEditing(tab)" @submit.prevent="updateTabName(tab)">
                     <input type="text" class="nav__tabs__tab__name-input" v-model="tab.name" ref="tabName">
                 </form>
                 <a href="#" class="rename-tab nav__tabs__tab__icon icon" @click.prevent="editTabName(tab)" v-if="!isEditing(tab)">&#9998;</a>
-                <a href="#" class="rename-tab nav__tabs__tab__icon icon" @click.prevent="updateTabName(tab)" v-if="isEditing(tab)">&#128504;</a>
-                <a href="#" class="close-tab nav__tabs__tab__icon icon" @click.prevent="closeTab(tab)">&times;</a>
+                <a href="#" class="rename-tab nav__tabs__tab__icon icon icon-update" @click.prevent="updateTabName(tab)" v-if="isEditing(tab)">&#128504;</a>
+                <a href="#" class="close-tab nav__tabs__tab__icon icon" @click.prevent="closeTab(tab)" v-if="!isEditing(tab)">&times;</a>
             </li>
             <li><a class="add-tab" href="#" @click.prevent="addTab">+</a></li>
         </ul>
@@ -207,6 +210,10 @@ nav .nav__buttons li a:hover {
     padding: 2px!important;
     color: black;
     background-color: white!important;
+}
+
+.nav__tabs__tab--editing .icon-update {
+    margin-right: 10px;
 }
 
 nav form {

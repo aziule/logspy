@@ -64,7 +64,6 @@ nav {
 .recent-files__title {
     color: black;
     text-align: center;
-    margin: 15px 0;
 }
 .recent-files__no-files {
     color: #888;
