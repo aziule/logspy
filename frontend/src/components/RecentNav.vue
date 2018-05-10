@@ -1,14 +1,18 @@
 <template>
     <nav>
-        <span class="title">Recent</span>
-        <ul class="recent-files">
+        <span class="recent-files__title">Recent</span>
+        <ul class="recent-files" v-if="recentFiles.length > 0">
             <li class="recent-files__item" v-for="file in sortedFiles" v-bind:file="file" v-bind:key="file.updatedAt" v-bind:value="file">
-                <a href="#" @click="openRecentFile($event, file)">
+                <a href="#" @click.prevent="openRecentFile(file)">
+                    <span @click.stop.prevent="removeRecentFile(file)" class="recent-files__item__remove">&times;</span>
                     <div v-if="file.type === 'remote'" class="recent-files__remote__name">{{ file.remoteServer.name }}</div>
                     {{ file.path }}
                 </a>
             </li>
         </ul>
+        <div v-if="recentFiles.length === 0" class="recent-files__no-files">
+            No recently opened files to display.
+        </div>
     </nav>
 </template>
 
@@ -30,8 +34,7 @@ export default {
         }
     },
     methods: {
-        openRecentFile (e, file) {
-            e.preventDefault()
+        openRecentFile (file) {
             var tabName = file.type === 'remote' ? file.remoteServer.name + ' ' : ''
             tabName += file.path
 
@@ -43,6 +46,9 @@ export default {
                 }).catch((err) => {
                     this.error = err.message
                 })
+        },
+        removeRecentFile (file) {
+            this.$store.dispatch(actionsList.REMOVE_RECENT_FILE, file)
         }
     }
 }
@@ -55,10 +61,13 @@ nav {
     padding: 0 15px;
     box-shadow: none;
 }
-.title {
+.recent-files__title {
     color: black;
     text-align: center;
     margin: 15px 0;
+}
+.recent-files__no-files {
+    color: #888;
 }
 .recent-files__item {
     margin-bottom: 15px;
@@ -66,6 +75,7 @@ nav {
     word-break: break-word;
     line-height: 1.5rem;
     background-color: #eee;
+    position: relative;
 }
 .recent-files__item a {
     padding: 10px;
@@ -73,5 +83,20 @@ nav {
 }
 .recent-files__remote__name {
     margin-bottom: 10px;
+    padding-right: 15px;
+}
+.recent-files__item__remove {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #888;
+    transition: color .2s;
+    color:  #ccc;
+}
+.recent-files__item:hover .recent-files__item__remove {
+    color:  #888;
+}
+.recent-files__item .recent-files__item__remove:hover {
+    color: black;
 }
 </style>

@@ -133,7 +133,7 @@ select {
     pointer-events: auto!important;
 }
 select, input {
-    border-color: #ddd;
+    border-color: #ddd!important;
 }
 input:focus {
     box-shadow: none!important;

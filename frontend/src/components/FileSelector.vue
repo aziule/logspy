@@ -2,9 +2,11 @@
     <section v-if="activeTab !== null" class="file-selector" v-bind:class="{'file-selector--opened': isFileOpened}">
         <div class="row">
             <form @submit="openFile" v-if="!isFileOpened">
-                <div class="error s12" v-if="error">{{ error }}</div>
+                <div class="col 12 m12" v-if="error">
+                    <div class="error ">{{ error }}</div>
+                </div>
                 <div class="input-field col s12 m3">
-                    <select v-model="activeTab.file.type">
+                    <select v-model="activeTab.file.type" v-on:change="onFileTypeChange">
                         <option value="local">Local file</option>
                         <option value="remote">Remote file</option>
                     </select>
@@ -77,6 +79,9 @@ export default {
                 }).catch((err) => {
                     this.error = err.message
                 })
+        },
+        onFileTypeChange () {
+            if (this.activeTab.file.type === 'local') this.activeTab.file.remoteServer = ''
         }
     }
 }
@@ -91,7 +96,7 @@ section.file-selector--opened {
     border-color: #eee;
 }
 .error {
-    margin: 15px 15px 0;
+    margin-top: 15px;
 }
 .input-field {
     line-height: 3rem;

@@ -15,6 +15,7 @@ export const GET_REMOTE_SERVERS = 'GET_REMOTE_SERVERS'
 // Recent files
 export const GET_RECENT_FILES = 'GET_RECENT_FILES'
 export const ADD_RECENT_FILE = 'ADD_RECENT_FILE'
+export const REMOVE_RECENT_FILE = 'REMOVE_RECENT_FILE'
 
 // Filtering
 export const FILTER_BY_LEVEL = 'FILTER_BY_LEVEL'

@@ -202,7 +202,6 @@ nav .nav__buttons li a:hover {
 
 .nav__tabs__tab__name-input {
     height: auto!important;
-    border: 1px solid #bdbdbd!important;
     margin: 0 3px 0 15px!important;
     width: auto!important;
     padding: 2px!important;

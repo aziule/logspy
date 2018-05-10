@@ -26,6 +26,18 @@ const ls = {
         }
 
         localStorage.setItem('recentFiles', JSON.stringify(files))
+    },
+    removeRecentFile (file) {
+        var files = this.getRecentFiles()
+
+        for (var i = 0, nbFiles = files.length; i < nbFiles; i++) {
+            if (files[i].hash === file.hash) {
+                files.splice(i, 1)
+                break
+            }
+        }
+
+        localStorage.setItem('recentFiles', JSON.stringify(files))
     }
 }
 
