@@ -12,6 +12,7 @@ var (
 	canUseStorage = true
 
 	ErrCorruptedDb = errors.New("Corrupted database file")
+	ErrNotFound    = errors.New("Resource not found")
 )
 
 type storage struct {

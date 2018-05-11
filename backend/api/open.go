@@ -7,6 +7,10 @@ import (
 	"github.com/aziule/simple-logs-gui/backend/listener"
 )
 
+type success struct {
+	Msg string `json:"msg"`
+}
+
 // HandleOpenLocalFile starts tailing a local log file
 func (api *Api) HandleOpenLocalFile(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query().Get("path")

@@ -20,8 +20,17 @@ type jsonError struct {
 	Message string `json:"message"`
 }
 
+// jsonSuccess is the struct returned when an operation succeeds and does not return any resource
+type jsonSuccess struct {
+	Msg string `json:"msg"`
+}
+
 // writeJson returns a JSON-formatted interface
 func (api *Api) writeJson(w http.ResponseWriter, v interface{}) {
+	if v == nil {
+		v = &jsonSuccess{"ok"}
+	}
+
 	j, err := json.Marshal(v)
 
 	if err != nil {

@@ -1,6 +1,9 @@
 package storage
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
 
 type remoteServer struct {
 	Id         int    `json:"id"`
@@ -12,6 +15,7 @@ type remoteServer struct {
 
 // CreateRemoteServer creates a new RemoteServer
 func CreateRemoteServer(name, host, username, sshKeyPath string) (*remoteServer, error) {
+	rand.Seed(time.Now().UTC().UnixNano())
 	rs := &remoteServer{
 		Id:         rand.Intn(133742101) + 1,
 		Name:       name,
@@ -35,6 +39,31 @@ func CreateRemoteServer(name, host, username, sshKeyPath string) (*remoteServer,
 	}
 
 	return rs, nil
+}
+
+// DeleteRemoteServer deletes a remote server based on its id
+func DeleteRemoteServer(id int) error {
+	s, err := getStorage()
+
+	if err != nil {
+		return err
+	}
+
+	var idx = -1
+
+	for i, rs := range s.RemoteServers {
+		if rs.Id == id {
+			idx = i
+		}
+	}
+
+	if idx == -1 {
+		return ErrNotFound
+	}
+
+	s.RemoteServers = append(s.RemoteServers[:idx], s.RemoteServers[idx+1:]...)
+
+	return s.Save()
 }
 
 // GetRemoteServers returns the list of available remote servers

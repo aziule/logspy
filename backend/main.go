@@ -24,6 +24,7 @@ func main() {
 	r.HandleFunc("/api/logs", api.HandleGetLogs)
 	r.HandleFunc("/api/remote-servers", api.HandleGetRemoteServers).Methods("GET")
 	r.HandleFunc("/api/remote-servers", api.HandleCreateRemoteServer).Methods("POST")
+	r.HandleFunc("/api/remote-servers/{id}", api.HandleDeleteRemoteServer).Methods("DELETE")
 
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
