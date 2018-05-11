@@ -2,8 +2,14 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 )
+
+var ErrMissingFormData = func(key string) error {
+	return errors.New(fmt.Sprintf("Missing field %s", key))
+}
 
 // Api is the struct responsible for containing any import Api-related information
 type Api struct{}
@@ -23,6 +29,7 @@ func (api *Api) writeJson(w http.ResponseWriter, v interface{}) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(j)
 }
 
@@ -39,5 +46,16 @@ func (api *Api) writeError(w http.ResponseWriter, msg string, code int) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(j)
+}
+
+func (api *Api) getMandatoryFormData(req *http.Request, key string) (string, error) {
+	val := req.Form.Get(key)
+
+	if val == "" {
+		return "", ErrMissingFormData(key)
+	}
+
+	return val, nil
 }

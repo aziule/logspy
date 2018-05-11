@@ -13,6 +13,7 @@
                 <span class="controls__control" @click="openSidePanel()" v-if="!showSidePanel">&rarr;</span>
                 <span class="controls__control" @click="closeSidePanel()" v-if="showSidePanel">&larr;</span>
             </div>
+            <ModalRemoteServers />
         </div>
     </section>
 </template>
@@ -24,13 +25,15 @@ import TabNav from '@/components/TabNav'
 import RecentNav from '@/components/RecentNav'
 import TabContent from '@/components/TabContent'
 import LogsList from '@/components/logs/LogsList'
+import ModalRemoteServers from '@/components/modals/ModalRemoteServers'
 
 export default {
     components: {
         TabNav,
         RecentNav,
         TabContent,
-        LogsList
+        LogsList,
+        ModalRemoteServers
     },
     name: 'App',
     computed: {
@@ -166,5 +169,13 @@ input:focus {
     height: 38px;
     line-height: 38px;
     margin: 0 5px;
+}
+.modal__header {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+.modal__header__title {
+    font-size: 1.2rem;
 }
 </style>

@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/aziule/simple-logs-gui/backend/api"
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -16,11 +17,14 @@ func main() {
 
 	api := &api.Api{}
 
-	http.Handle("/", http.FileServer(http.Dir("../frontend/dist")))
-	http.HandleFunc("/api/open/local", api.HandleOpenLocalFile)
-	http.HandleFunc("/api/open/remote", api.HandleOpenRemoteFile)
-	http.HandleFunc("/api/logs", api.HandleGetLogs)
-	http.HandleFunc("/api/remote-servers", api.HandleGetSavedRemoteServers)
+	r := mux.NewRouter()
+	r.Handle("/", http.FileServer(http.Dir("../frontend/dist")))
+	r.HandleFunc("/api/open/local", api.HandleOpenLocalFile)
+	r.HandleFunc("/api/open/remote", api.HandleOpenRemoteFile)
+	r.HandleFunc("/api/logs", api.HandleGetLogs)
+	r.HandleFunc("/api/remote-servers", api.HandleGetRemoteServers).Methods("GET")
+	r.HandleFunc("/api/remote-servers", api.HandleCreateRemoteServer).Methods("POST")
 
+	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

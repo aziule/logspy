@@ -15,7 +15,18 @@ var (
 )
 
 type storage struct {
-	RemoteServers []*RemoteServer `json:"remote_servers"`
+	RemoteServers []*remoteServer `json:"remote_servers"`
+}
+
+// Save updates the storage
+func (s *storage) Save() error {
+	j, err := json.Marshal(s)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return ioutil.WriteFile(db, j, 0644)
 }
 
 // storage returns the full storage object
@@ -44,13 +55,7 @@ func getStorage() (*storage, error) {
 func createConfigFile() {
 	emptyStorage := &storage{}
 
-	j, err := json.Marshal(emptyStorage)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = ioutil.WriteFile(db, j, 0644)
+	err := emptyStorage.Save()
 
 	if err != nil {
 		canUseStorage = false

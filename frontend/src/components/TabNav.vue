@@ -4,7 +4,7 @@
             <li v-for="tab in tabs" v-bind:value="tab" v-bind:tab="tab" v-bind:key="tab.id" v-bind:class="{
                 active: tab.id === activeTab.id,
                 'nav__tabs__tab--editing': isEditing(tab)
-             }">
+            }">
                 <a v-if="!isEditing(tab)" href="#" @click.prevent="selectTab(tab)">{{ tab.name }}</a>
                 <form v-if="isEditing(tab)" @submit.prevent="updateTabName(tab)">
                     <input type="text" class="nav__tabs__tab__name-input" v-model="tab.name" ref="tabName">
@@ -16,7 +16,7 @@
             <li><a class="add-tab" href="#" @click.prevent="addTab">+</a></li>
         </ul>
         <ul class="right nav__buttons">
-            <li><a href="#"><i class="icon icon-crank"></i></a></li>
+            <li><a href="#" @click.prevent="showModalRemoteServers()"><i class="icon icon-crank"></i></a></li>
         </ul>
     </nav>
 </template>
@@ -60,6 +60,9 @@ export default {
         updateTabName (tab) {
             var tabIndex = this.editedTabNames.indexOf(tab.id)
             this.editedTabNames.splice(tabIndex, 1)
+        },
+        showModalRemoteServers () {
+            this.$modal.show('remote-servers')
         }
     },
     mounted () {
