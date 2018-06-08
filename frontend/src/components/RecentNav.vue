@@ -1,6 +1,9 @@
 <template>
     <nav>
         <span class="recent-files__title">Recent</span>
+        <div class="col 12 m12" v-if="error">
+            <div class="error ">{{ error }}</div>
+        </div>
         <ul class="recent-files" v-if="recentFiles.length > 0">
             <li class="recent-files__item" v-for="file in sortedFiles" v-bind:file="file" v-bind:key="file.updatedAt" v-bind:value="file">
                 <a href="#" @click.prevent="openRecentFile(file)">
@@ -22,6 +25,11 @@ import * as actionsList from '@/store/actions-list'
 
 export default {
     name: 'RecentNav',
+    data: () => {
+        return {
+            'error': null
+        }
+    },
     computed: {
         ...mapGetters([
             'recentFiles'
@@ -38,10 +46,10 @@ export default {
             var tabName = file.type === 'remote' ? file.remoteServer.name + ' ' : ''
             tabName += file.path
 
-            this.$store.dispatch(actionsList.CREATE_NEW_TAB, tabName)
             this.$store.dispatch(actionsList.OPEN_LOG_FILE, file)
                 .then(() => {
                     this.error = null
+                    this.$store.dispatch(actionsList.CREATE_NEW_TAB, tabName)
                     this.$store.dispatch(actionsList.READ_LOG_FILE, file)
                 }).catch((err) => {
                     this.error = err.message
@@ -97,5 +105,9 @@ nav {
 }
 .recent-files__item .recent-files__item__remove:hover {
     color: black;
+}
+.error {
+    line-height: 1.2rem;
+    margin-bottom: 15px;
 }
 </style>
